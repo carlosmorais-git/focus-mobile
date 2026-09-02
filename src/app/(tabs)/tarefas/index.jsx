@@ -1,11 +1,12 @@
 import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import useContextoTarefa from "../../../context/tarefas/useContextoTarefa";
+import useContextoTarefa from "../../../context/tarefas/ProvedorTarefas";
 import TarefaItem from "../../../components/TarefaItem";
 import FocoBotao from "../../../components/FocoBotao";
 import { IconPlus } from "../../../components/Icons";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { cores, espaco, fonte } from "@/theme";
 
 export default function Tarefas() {
   const { tarefas, deletarTarefa, completarTarefa } = useContextoTarefa();
@@ -35,7 +36,7 @@ export default function Tarefas() {
             />
           )}
           ListEmptyComponent={
-            <Text style={{ textAlign: "center", marginTop: 20, color: "#aaa" }}>
+            <Text style={styles.textoVazio}>
               Nenhuma tarefa ainda. Crie a primeira!
             </Text>
           }
@@ -56,18 +57,23 @@ export default function Tarefas() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#021123",
+    backgroundColor: cores.fundo,
     alignItems: "center",
   },
   wrapper: {
     flex: 0.95, // ← ESSENCIAL
     width: "90%",
-    gap: 40,
-    paddingTop: 20,
+    gap: espaco.gigante,
+    paddingTop: espaco.xl,
   },
   texto: {
-    fontSize: 26,
-    color: "#fff",
+    fontSize: fonte.titulo,
+    color: cores.texto,
     textAlign: "center",
+  },
+  textoVazio: {
+    textAlign: "center",
+    marginTop: espaco.xl,
+    color: cores.textoVazio,
   },
 });

@@ -4,6 +4,7 @@
 // então as rotas continuam sendo /pomodoro e /tarefas.
 import { Tabs } from "expo-router/js-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { cores, espaco, fonte } from "@/theme";
 
 export default function LayoutTabs() {
   return (
@@ -11,17 +12,17 @@ export default function LayoutTabs() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#021123",
-          borderTopColor: "#144480",
+          backgroundColor: cores.fundo,
+          borderTopColor: cores.borda,
           borderTopWidth: 2,
           height: 120,
-          paddingBottom: 10,
-          paddingTop: 10,
+          paddingBottom: espaco.sm,
+          paddingTop: espaco.sm,
         },
-        tabBarActiveTintColor: "#B872FF",
-        tabBarInactiveTintColor: "#98A0A8",
+        tabBarActiveTintColor: cores.destaque,
+        tabBarInactiveTintColor: cores.textoSecundario,
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: fonte.xs,
           fontWeight: "600",
         },
       }}

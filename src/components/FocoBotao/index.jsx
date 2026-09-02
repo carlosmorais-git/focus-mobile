@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text } from "react-native";
+import { cores, espaco, fonte, raio } from "@/theme";
 // Componente FocoBotao que representa um botão de play ou ação
 const FocoBotao = ({ titulo, onPress, img, outline, disabled }) => {
   return (
@@ -27,32 +28,32 @@ export default FocoBotao;
 
 const styles = StyleSheet.create({
   botao: {
-    backgroundColor: "#B872FF",
-    borderRadius: 32,
-    padding: 8,
+    backgroundColor: cores.destaque,
+    borderRadius: raio.pilula,
+    padding: espaco.xs,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    gap: 12,
+    gap: espaco.md,
   },
   botaoText: {
-    color: "#021123",
-    fontSize: 18,
+    color: cores.textoSobreClaro,
+    fontSize: fonte.lg,
   },
   botaoOutline: {
     backgroundColor: "transparent",
-    borderColor: "#b872ff",
+    borderColor: cores.destaque,
     borderWidth: 2,
   },
   botaoOutlineDisabled: {
     backgroundColor: "transparent",
-    borderColor: "rgba(114, 114, 114, 0.88)",
+    borderColor: cores.desabilitado,
     borderWidth: 2,
   },
   textoOutline: {
-    color: "#b872ff",
+    color: cores.destaque,
   },
   textoDisabled: {
-    color: "rgba(114, 114, 114, 0.88)",
+    color: cores.desabilitado,
   },
 });

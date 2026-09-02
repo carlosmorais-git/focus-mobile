@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState,useContext  } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 // Atencao so sabe usar string
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // Criação do contexto das tarefas
@@ -8,6 +8,8 @@ const TAREFAS_STOREGE_KEY = "foco-tarefas";
 export function ProvedorTarefas({ children }) {
   const [tarefas, setTarefas] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  // Guarda a última falha de gravação. null = tudo persistido.
+  const [erroPersistencia, setErroPersistencia] = useState(null);
 
   // Carrega os dados salvos no armazenamento local (AsyncStorage) assim que o componente for montado
   useEffect(() => {
@@ -22,19 +24,29 @@ export function ProvedorTarefas({ children }) {
 
   // Função para salvar os dados no armazenamento local
   const storeData = async (value) => {
-    try {
-      const jsonValue = JSON.stringify(value); // Converte o array de tarefas para JSON
-      await AsyncStorage.setItem(TAREFAS_STOREGE_KEY, jsonValue); // Salva no AsyncStorage
-    } catch (_e) {
-      // Erro ao salvar os dados (pode-se exibir um alerta ou log se desejar)
-    }
+    const jsonValue = JSON.stringify(value); // Converte o array de tarefas para JSON
+    await AsyncStorage.setItem(TAREFAS_STOREGE_KEY, jsonValue); // Salva no AsyncStorage
   };
 
   // Salva automaticamente as tarefas sempre que elas forem modificadas, após o carregamento inicial
   useEffect(() => {
-    if (isLoaded) {
-      storeData(tarefas); // Persistência automática das alterações
-    }
+    if (!isLoaded) return; // Não grava antes do load inicial terminar
+
+    let ativo = true; // Evita atualizar estado depois de desmontar
+
+    storeData(tarefas)
+      .then(() => {
+        if (ativo) setErroPersistencia(null); // Gravou: limpa a falha anterior
+      })
+      .catch((erro) => {
+        // Sem isso a tarefa some no próximo boot e ninguém fica sabendo
+        console.error("Falha ao salvar as tarefas no AsyncStorage", erro);
+        if (ativo) setErroPersistencia(erro);
+      });
+
+    return () => {
+      ativo = false;
+    };
   }, [tarefas, isLoaded]); // Dispara sempre que o estado `tarefas` mudar
 
   // Adiciona uma nova tarefa com descrição e ID único
@@ -83,6 +95,7 @@ export function ProvedorTarefas({ children }) {
     <TaskContext.Provider
       value={{
         tarefas, // Lista de tarefas
+        erroPersistencia, // Última falha de gravação, ou null
         addTarefa, // Função para adicionar tarefa
         completarTarefa, // Função para alternar status de conclusão
         deletarTarefa, // Função para remover tarefa
@@ -95,14 +108,15 @@ export function ProvedorTarefas({ children }) {
   );
 }
 
+/** Acessa o contexto de tarefas. Lança se usado fora do ProvedorTarefas. */
 export default function useContextoTarefa() {
-  const context = useContext(TaskContext); // busca o valor do contexto.
+  const contexto = useContext(TaskContext);
 
-  if (!context) {
+  if (!contexto) {
     throw new Error(
       "useContextoTarefa deve ser usado dentro do ProvedorTarefas."
     );
   }
 
-  return context;
+  return contexto;
 }

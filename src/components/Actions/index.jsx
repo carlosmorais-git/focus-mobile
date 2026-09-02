@@ -1,5 +1,6 @@
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
+import { cores, espaco, raio } from "@/theme";
 const AbasModo = ({ modoAtivo, mudarModo, valueDic }) => {
   return (
     <>
@@ -23,12 +24,12 @@ export default AbasModo;
 
 const styles = StyleSheet.create({
   textModo: {
-    color: "#fff",
+    color: cores.texto,
     fontSize: 12.5,
-    padding: 8,
+    padding: espaco.xs,
   },
   textoModoAtivo: {
-    backgroundColor: "#144480",
-    borderRadius: 8,
+    backgroundColor: cores.borda,
+    borderRadius: raio.sm,
   },
 });

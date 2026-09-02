@@ -6,6 +6,7 @@ import Img_Logo from "../assets/images/Fokus -  logo-02 1.png";
 import Img_TelaInicial from "../assets/images/Imagem tela inicial.png";
 import Footer from "../components/Footer";
 import FocoBotao from "@/components/FocoBotao";
+import { cores, espaco, fonte, raio } from "@/theme";
 export default function Index() {
   return (
     // Exibi só na area segura
@@ -39,15 +40,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#021123",
-    gap: 40,
+    backgroundColor: cores.fundo,
+    gap: espaco.gigante,
   },
   inner: {
-    gap: 16,
+    gap: espaco.lg,
   },
   texto: {
-    color: "#fff",
-    fontSize: 26,
+    color: cores.texto,
+    fontSize: fonte.titulo,
     textAlign: "center",
   },
   bold: {
@@ -56,16 +57,16 @@ const styles = StyleSheet.create({
   imagem: {
     width: 300,
     height: 300,
-    padding: 10,
+    padding: espaco.sm,
   },
   botao: {
-    backgroundColor: "#B872FF",
-    borderRadius: 32,
-    padding: 8,
+    backgroundColor: cores.destaque,
+    borderRadius: raio.pilula,
+    padding: espaco.xs,
   },
   botaoText: {
-    color: "#021123",
-    fontSize: 18,
+    color: cores.textoSobreClaro,
+    fontSize: fonte.lg,
     textAlign: "center",
   },
 });

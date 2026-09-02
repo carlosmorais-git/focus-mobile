@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
+import { cores, espaco, fonte } from "@/theme";
 
 const Tempo = ({ modoAtivo, segundo }) => {
   // Converte o tempo em milissegundos
@@ -20,10 +21,10 @@ export default Tempo;
 
 const styles = StyleSheet.create({
   timer: {
-    color: "#fff",
-    fontSize: 50,
+    color: cores.texto,
+    fontSize: fonte.cronometro,
     fontWeight: "bold",
     textAlign: "center",
-    marginVertical: 20,
+    marginVertical: espaco.xl,
   },
 });

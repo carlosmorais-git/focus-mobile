@@ -5,6 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ProvedorTarefas } from "../context/tarefas/ProvedorTarefas";
 import ModalGlobal from "../components/ModalGlobal";
 import { ProvedorModal } from "../context/modal/ProvedorModal";
+import { cores } from "@/theme";
 
 /* 
 Organização dos contextos:
@@ -15,16 +16,16 @@ Organização dos contextos:
 
 export default function Layout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#021123" }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: cores.fundo }}>
       <SafeAreaProvider>
         <ProvedorTarefas>
           <ProvedorModal>
             <Stack
               screenOptions={{
-                headerStyle: { backgroundColor: "#021123" },
-                headerTintColor: "#fff",
+                headerStyle: { backgroundColor: cores.fundo },
+                headerTintColor: cores.texto,
                 headerTitleAlign: "center",
-                contentStyle: { backgroundColor: "#021123" },
+                contentStyle: { backgroundColor: cores.fundo },
               }}
             >
               {/* Tela inicial — fora das abas, sem header */}

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Animated } from "react-native";
 
-import useContextoTarefa from "../../context/tarefas/useContextoTarefa";
+import useContextoTarefa from "../../context/tarefas/ProvedorTarefas";
 import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
 
 import DigitarTarefa from "../../components/DigitarTarefa";

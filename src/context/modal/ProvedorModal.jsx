@@ -58,6 +58,7 @@ export const ProvedorModal = ({ children }) => {
   );
 };
 
+/** Acessa o contexto de modal. Lança se usado fora do ProvedorModal. */
 export default function useModal() {
   const contexto = useContext(ModalContext);
 

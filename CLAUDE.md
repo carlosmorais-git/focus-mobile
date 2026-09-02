@@ -53,18 +53,34 @@ dentro do próprio listener entra em laço: navegar remove a tela, remover dispa
 
 Dois Contexts, aninhados nesta ordem em `_layout.jsx` (dados → interface):
 
-| Contexto | Provedor | Hook | Responsabilidade |
+| Contexto | Arquivo | Hook | Responsabilidade |
 |---|---|---|---|
-| Tarefas | [ProvedorTarefas](src/context/tarefas/ProvedorTarefas.jsx) | `useContextoTarefa` | CRUD + persistência |
-| Modal | [ProvedorModal](src/context/modal/ProvedorModal.jsx) | `useModal` | confirmação (Promise) + loading |
+| Tarefas | [ProvedorTarefas.jsx](src/context/tarefas/ProvedorTarefas.jsx) | `useContextoTarefa` | CRUD + persistência |
+| Modal | [ProvedorModal.jsx](src/context/modal/ProvedorModal.jsx) | `useModal` | confirmação (Promise) + loading |
+
+**Um arquivo por domínio.** O provedor é `export` nomeado, o hook é o `export default`
+do mesmo arquivo — não existe arquivo separado só para o hook.
+
+```js
+import { ProvedorTarefas } from "../context/tarefas/ProvedorTarefas"; // provedor
+import useContextoTarefa from "../context/tarefas/ProvedorTarefas";   // hook
+```
 
 Cada hook lança erro se usado fora do provedor. Sem Redux/Zustand — não introduzir sem pedir.
+
+Já existiram `useContextoTarefa.js` e `useModal.jsx` separados, duplicando o hook que
+também estava inline no provedor. Os separados foram apagados. Não recriar: um domínio,
+um arquivo.
 
 **Persistência:** AsyncStorage, chave `foco-tarefas`. Salva automaticamente em `useEffect` sobre `tarefas`, protegido por flag `isLoaded` (evita gravar array vazio antes do load inicial).
 
 **Tarefa:** `{ id: number, descricao: string, completed: boolean }`. `id` = `Date.now() + random(1000)`.
 
 **Modal de confirmação** retorna Promise: `const ok = await confirmar({ titulo, mensagem })`.
+
+O contexto de tarefas expõe `erroPersistencia`: a última falha de gravação no AsyncStorage,
+ou `null`. Nenhuma tela lê ainda. O `catch` não pode voltar a ser vazio — sem isso a tarefa
+some no próximo boot em silêncio.
 
 Não existe sistema de toast/notificação — modal é a única superfície de feedback.
 Foi removido de propósito; não reintroduzir sem pedido explícito.
@@ -75,18 +91,32 @@ Foi removido de propósito; não reintroduzir sem pedido explícito.
 
 ## Estilo
 
-`StyleSheet.create` local em cada arquivo. Sem tema centralizado (`src/assets/style.jsx` está vazio).
-Paleta fixa, repetida à mão:
+`StyleSheet.create` local em cada arquivo, mas os **valores vêm de [src/theme/](src/theme/index.js)**.
+Nenhuma cor, espaçamento, raio ou tamanho de fonte literal fora desse arquivo — se precisar de um
+valor novo, adicione um token; não escreva o hex no `StyleSheet`.
 
-| Cor | Uso |
-|---|---|
-| `#021123` | fundo (tema escuro) |
-| `#B872FF` | roxo — destaque, tab ativa |
-| `#144480` | bordas, cards |
-| `#98A0A8` | texto secundário, tab inativa |
-| `#fff` | texto primário |
+```js
+import { cores, espaco, fonte, raio, sombra } from "@/theme";
 
-Animações: `Animated` da RN core. `react-native-reanimated` está instalado mas não é usado no código atual.
+backgroundColor: cores.fundo,
+padding: espaco.lg,
+borderRadius: raio.pilula,
+```
+
+| Token | Valor | Uso |
+|---|---|---|
+| `cores.fundo` | `#021123` | fundo de todas as telas |
+| `cores.destaque` | `#B872FF` | roxo da marca, aba ativa |
+| `cores.borda` | `#144480` | bordas, cards, fundo do modal |
+| `cores.textoSecundario` | `#98A0A8` | rodapé, aba inativa |
+| `cores.texto` | `#fff` | texto primário |
+| `cores.textoSobreClaro` | `#021123` | texto e ícone sobre fundo claro |
+
+App é **escuro fixo**: `app.json` declara `userInterfaceStyle: "dark"`.
+Para abrir tema claro, transformar `cores` num mapa `{ dark, light }` e ler com
+`useColorScheme()` — os nomes dos tokens continuam valendo.
+
+Animações: `Animated` da RN core. `react-native-reanimated` foi removido — não reinstalar sem pedir.
 
 Sombras usam `boxShadow` (string CSS), não os props `shadow*`, que estão depreciados e
 disparam warning no react-native-web. `elevation` continua para o Android.
@@ -148,9 +178,11 @@ e espelha `ios.buildNumber`.
 ## Pendências conhecidas
 
 - `icon`, `favicon` e `splash` do `app.json` apontam todos para `adaptive-icon.png` (225x225). Expo recomenda **1024x1024** para o ícone — gerar assets dedicados antes de publicar.
-- `src/assets/style.jsx` está vazio: não há tema centralizado, as cores da paleta são repetidas à mão em cada `StyleSheet`.
-- `react-native-reanimated` está em `dependencies` mas não é usado no código.
 - Sem testes automatizados.
+- `expo-haptics` e `react-native-uuid` estão instalados e ainda sem uso: são reserva
+  declarada para itens de "Conhecido e adiado" no [Roadmap.md](Roadmap.md).
+  Não remover como "dependência morta".
+- `react-native-worklets` é peer de `expo-modules-core` e `@expo/ui`. Não remover.
 
 ## Convenções
 

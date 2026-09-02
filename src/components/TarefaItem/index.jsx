@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { Text, View, Pressable, StyleSheet, Animated } from "react-native";
 import { IconCheck, IconTrash } from "../Icons";
-import useModal from "../../context/modal/useModal";
+import useModal from "../../context/modal/ProvedorModal";
 import useValorAnimado from "../../hooks/useValorAnimado";
+import { cores, espaco, fonte, raio, sombra } from "@/theme";
 
 const TarefaItem = ({
   completed,
@@ -62,7 +63,7 @@ const TarefaItem = ({
   // Interpolação da cor de fundo
   const backgroundColor = backgroundColorAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ["#98A0A8", "#0f725c"],
+    outputRange: [cores.tarefaPendente, cores.tarefaConcluida],
   });
 
   return (
@@ -109,40 +110,40 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 12,
+    paddingHorizontal: espaco.md,
     paddingVertical: 18,
-    borderRadius: 12,
-    margin: 10,
-    gap: 10,
+    borderRadius: raio.md,
+    margin: espaco.sm,
+    gap: espaco.sm,
     elevation: 3,
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    boxShadow: sombra.card,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: cores.bordaSutil,
   },
   campoChek: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: espaco.md,
   },
   textoContainer: {
     flex: 1,
   },
   text: {
-    color: "#021123",
-    fontSize: 16,
+    color: cores.textoSobreClaro,
+    fontSize: fonte.md,
     fontWeight: "600",
     textAlign: "left",
     lineHeight: 22,
   },
   textCompleted: {
     textDecorationLine: "line-through",
-    color: "#fff",
+    color: cores.texto,
     opacity: 0.8,
   },
   botaoDelete: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: "rgba(220, 53, 69, 0.1)",
+    padding: espaco.xs,
+    borderRadius: raio.sm,
+    backgroundColor: cores.perigoFundo,
   },
 });

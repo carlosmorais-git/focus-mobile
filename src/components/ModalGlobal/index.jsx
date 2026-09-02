@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import useModal from "../../context/modal/useModal";
+import useModal from "../../context/modal/ProvedorModal";
+import { cores, espaco, fonte, raio, sombra } from "@/theme";
 import useValorAnimado from "../../hooks/useValorAnimado";
 
 export default function ModalGlobal() {
@@ -82,13 +83,13 @@ export default function ModalGlobal() {
             {/* Ícone do tipo de modal */}
             {modal.tipo === "confirmacao" && (
               <View style={styles.iconeContainer}>
-                <Ionicons name="help-circle" size={48} color="#B872FF" />
+                <Ionicons name="help-circle" size={48} color={cores.destaque} />
               </View>
             )}
 
             {modal.tipo === "carregando" && (
               <View style={styles.iconeContainer}>
-                <ActivityIndicator size="large" color="#B872FF" />
+                <ActivityIndicator size="large" color={cores.destaque} />
               </View>
             )}
 
@@ -106,14 +107,14 @@ export default function ModalGlobal() {
                     style={[styles.botao, styles.botaoCancelar]}
                     onPress={modal.onCancelar}
                   >
-                    <Ionicons name="close" size={20} color="#fff" />
+                    <Ionicons name="close" size={20} color={cores.texto} />
                     <Text style={styles.textoBotao}>Cancelar</Text>
                   </Pressable>
                   <Pressable
                     style={[styles.botao, styles.botaoConfirmar]}
                     onPress={modal.onConfirmar}
                   >
-                    <Ionicons name="checkmark" size={20} color="#fff" />
+                    <Ionicons name="checkmark" size={20} color={cores.texto} />
                     <Text style={styles.textoBotao}>Confirmar</Text>
                   </Pressable>
                 </View>
@@ -129,44 +130,44 @@ export default function ModalGlobal() {
 const styles = StyleSheet.create({
   fundo: {
     flex: 1,
-    backgroundColor: "rgba(2, 17, 35, 0.8)", // Cor de fundo mais escura para combinar com o tema
+    backgroundColor: cores.overlay,
     justifyContent: "center",
     alignItems: "center",
   },
   container: {
-    backgroundColor: "#144480", // Cor de fundo do modal combinando com o tema
-    padding: 24,
-    borderRadius: 20,
+    backgroundColor: cores.borda,
+    padding: espaco.xxl,
+    borderRadius: raio.lg,
     width: "85%",
     maxWidth: 400,
     alignItems: "center",
     elevation: 12,
-    boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.4)",
+    boxShadow: sombra.modal,
     borderWidth: 2,
-    borderColor: "#B872FF", // Borda roxa para destaque
+    borderColor: cores.destaque, // Borda roxa para destaque
   },
   iconeContainer: {
-    marginBottom: 16,
-    padding: 8,
+    marginBottom: espaco.lg,
+    padding: espaco.xs,
   },
   titulo: {
-    fontSize: 22,
+    fontSize: fonte.xxl,
     fontWeight: "bold",
-    marginBottom: 12,
+    marginBottom: espaco.md,
     textAlign: "center",
-    color: "#fff", // Texto branco
+    color: cores.texto,
   },
   mensagem: {
-    fontSize: 16,
+    fontSize: fonte.md,
     textAlign: "center",
-    marginBottom: 24,
-    color: "#98A0A8", // Cor cinza clara para o texto secundário
+    marginBottom: espaco.xxl,
+    color: cores.textoSecundario,
     lineHeight: 22,
   },
   botoes: {
     flexDirection: "row",
-    gap: 16,
-    marginTop: 8,
+    gap: espaco.lg,
+    marginTop: espaco.xs,
     width: "100%",
   },
   botao: {
@@ -174,24 +175,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    gap: 8,
+    paddingVertical: espaco.md,
+    paddingHorizontal: espaco.xl,
+    borderRadius: raio.md,
+    gap: espaco.xs,
   },
   botaoCancelar: {
-    backgroundColor: "#dc3545",
+    backgroundColor: cores.perigo,
     borderWidth: 1,
-    borderColor: "#c82333",
+    borderColor: cores.perigoBorda,
   },
   botaoConfirmar: {
-    backgroundColor: "#28a745",
+    backgroundColor: cores.sucesso,
     borderWidth: 1,
-    borderColor: "#1e7e34",
+    borderColor: cores.sucessoBorda,
   },
   textoBotao: {
-    color: "#fff",
+    color: cores.texto,
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: fonte.md,
   },
 });

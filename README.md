@@ -1,170 +1,127 @@
-# 🎯 FOCO — App de Produtividade e Pomodoro
+<div align="center">
 
-Aplicativo mobile que combina **técnica Pomodoro** e **gerenciamento de tarefas**, desenvolvido com **React Native + Expo**.
+<img src="src/assets/images/logo.png" width="120" alt="Logo do FOCO">
 
----
+# FOCO
 
-## ✨ Funcionalidades
+Timer Pomodoro e gerenciador de tarefas em React Native.
 
-- 🍅 **Timer Pomodoro** — Sessões de foco com cronômetro
-- 📋 **Lista de Tarefas** — Criar, editar, excluir e marcar como concluída
-- 🎨 **Animações** — Feedback visual ao completar tarefas
-- 📱 **Navegação por Abas** — Interface moderna com bottom tabs
-- 🌙 **Tema Escuro** — Design em tons escuros e roxos
+`React Native 0.86` · `Expo SDK 57` · `expo-router` · `Context API` · `AsyncStorage`
+
+</div>
 
 ---
 
-## 🚀 Como Rodar
+## Telas
+
+| Início | Cronômetro |
+|---|---|
+| <img src="src/assets/Designer/1_capa_inicio.jpg" width="260"> | <img src="src/assets/Designer/2_cronometro.jpg" width="260"> |
+
+| Tarefas | Nova tarefa |
+|---|---|
+| <img src="src/assets/Designer/3_lista_tarefas.jpg" width="260"> | <img src="src/assets/Designer/4_criar_tarefas.jpg" width="260"> |
+
+---
+
+## O que faz
+
+- **Pomodoro** com três modos: foco (25 min), descanso curto (5) e longo (15)
+- **Tarefas** com criar, editar, excluir e concluir
+- **Persistência local** em AsyncStorage — funciona offline, nada sai do aparelho
+- **Modal de confirmação** baseado em Promise: `const ok = await confirmar({ titulo, mensagem })`
+- Tema escuro, tokens centralizados em [`src/theme/`](src/theme/index.js)
+
+---
+
+## Rodando
 
 ```bash
-# Clone o repositório
 git clone https://github.com/carlosmorais-git/AplicativoFocus.git
 cd AplicativoFocus
-
-# Instale as dependências
 npm install
-
-# Inicie o app
 npm start
 ```
 
-💡 **No Windows:** execute `iniciar-projeto-foco.bat`  
-Depois, escaneie o QR Code com o **Expo Go** ou use o emulador (`a` para Android, `i` para iOS).
+Escaneie o QR Code com o **Expo Go**, ou tecle `a` (Android), `i` (iOS), `w` (web).
+
+### Por cabo USB
+
+Sem Wi-Fi, ou em rede que bloqueia a porta do Metro:
+
+```bash
+npm run adb:devices   # confere se o aparelho aparece
+npm run android:usb   # espera o device, cria o túnel adb, abre o app
+```
+
+O túnel cai quando o cabo desconecta — rode `npm run adb:reverse` de novo.
+`adb devices` mostrando `unauthorized` é o popup de depuração USB pendente no aparelho.
 
 ---
 
-## 🧩 Stack
-
-React Native • Expo • Expo Router • Context API • AsyncStorage
-
----
-
-## 🏗️ Estrutura
+## Estrutura
 
 ```
 src/
-├── app/                    # Rotas (expo-router)
-│   ├── _layout.jsx         # Layout raiz: providers + bottom tabs
-│   ├── index.jsx           # Tela inicial
-│   ├── pomodoro.jsx        # Aba Foco — cronômetro
-│   ├── tarefas/            # Aba Tarefas — lista
-│   ├── add_tarefa/         # Adicionar tarefa
-│   ├── edit_tarefa/        # Editar tarefa ([id].jsx)
-│   └── dialog_pagina/      # Tela de teste de modais/notificações
+├── app/                    # rotas (expo-router, file-based)
+│   ├── _layout.jsx         # Stack raiz + providers
+│   ├── index.jsx           # tela inicial
+│   ├── (tabs)/             # as abas são UMA tela do Stack
+│   │   ├── _layout.jsx     # Bottom Tabs
+│   │   ├── pomodoro.jsx    # aba Foco
+│   │   └── tarefas/        # aba Tarefas
+│   ├── add_tarefa/         # empilha por cima das abas
+│   └── edit_tarefa/[id].jsx
 │
-├── components/             # Componentes (cada um em pasta com index.jsx)
-│   ├── Actions/            # Botões de modo do Pomodoro
-│   ├── DigitarTarefa/      # Formulário de tarefa
-│   ├── FocoBotao/          # Botão principal
-│   ├── Footer/             # Rodapé
-│   ├── Icons/              # Ícones SVG
-│   ├── ModalGlobal/        # Modal reutilizável
-│   ├── NotificacaoGlobal/  # Sistema de notificações
-│   ├── TarefaItem/         # Item da lista
-│   ├── Tempo/              # Display do cronômetro
-│   └── VoltaRoteador/      # Botão físico de voltar (Android)
-│
-├── context/                # Estado global (Context API)
-│   ├── modal/              # Controle de modais
-│   ├── notificacao/        # Controle de notificações
-│   └── tarefas/            # Controle global de tarefas + AsyncStorage
-│
-├── hooks/                  # Hooks reutilizáveis
-│
-└── assets/                 # Imagens, fontes
-    ├── Designer/           # Prints do app funcionando
-    ├── fonts/
-    └── images/
+├── components/             # um componente por pasta, com index.jsx
+├── context/                # Context API: provedor + hook por domínio
+├── hooks/
+├── theme/                  # cores, espaçamento, raio, fonte
+└── assets/
 ```
+
+Navegação é um **Stack na raiz** com as abas como primeira tela; `add_tarefa` e
+`edit_tarefa` empilham por cima e ganham voltar nativo. Os parênteses em `(tabs)`
+marcam um grupo de rotas — não entram na URL, então as rotas seguem `/pomodoro` e
+`/tarefas`.
 
 ---
 
-## 🔧 Scripts
+## Scripts
 
 ```bash
-npm start          # Iniciar o app
-npm run android    # Executar no Android
-npm run ios        # Executar no iOS
-npm run web        # Executar na web
-npm run lint       # Verificar código
+npm start              # expo start
+npm run android        # abre no Android
+npm run ios            # abre no iOS
+npm run web            # abre no navegador
+npm run lint           # expo lint
+
+npm run android:usb    # Android por cabo (túnel adb + Metro em IPv4)
+npm run adb:reverse    # só o túnel
+npm run adb:devices    # lista aparelhos
+
+npm run release:patch  # 1.0.0 -> 1.0.1
+npm run release:minor  # 1.0.0 -> 1.1.0
+npm run release:major  # 1.0.0 -> 2.0.0
 ```
 
-### Versionamento
-
-```bash
-npm run release:patch   # 1.0.0 -> 1.0.1  (correção)
-npm run release:minor   # 1.0.0 -> 1.1.0  (funcionalidade nova)
-npm run release:major   # 1.0.0 -> 2.0.0  (quebra compatibilidade)
-```
-
-Cada um faz o ciclo completo: sobe a versão no `package.json`, sincroniza o `app.json`
-(`expo.version`, `android.versionCode` +1, `ios.buildNumber`), commita os dois juntos
-e cria a tag git.
-
-⚠️ Exige a árvore do git limpa — commite ou guarde as alterações antes.
+Os `release:*` fazem o ciclo inteiro: sobem a versão no `package.json`, sincronizam o
+`app.json` (`expo.version`, `android.versionCode` +1, `ios.buildNumber`), commitam os dois
+juntos e criam a tag. Exigem a árvore do git limpa.
 
 ---
 
-## ❓ FAQ
+## Estado
 
-**O app funciona offline?**  
-✅ Sim! Todos os dados são armazenados localmente.
+`expo lint` fecha em zero, `npx expo-doctor` em 21/21. Sem testes automatizados.
 
-**Posso personalizar o tempo do Pomodoro?**  
-🕒 Ainda não, mas está no roadmap.
-
-**Consome muita bateria?**  
-🔋 Não! As animações usam a API `Animated` da React Native com `useNativeDriver`, rodando na thread nativa.
-
-**Funciona em tablets?**  
-📱 Sim, com layout responsivo.
+O plano do que falta — e o que é defeito conhecido e adiado de propósito — está no
+[Roadmap.md](Roadmap.md), com arquivo e linha em cada item.
 
 ---
 
-## 📋 Roadmap
+## Licença
 
-- [ ] Persistência de dados (AsyncStorage)
-- [ ] Estatísticas de produtividade
-- [ ] Notificações push
-- [ ] Temas personalizáveis
-- [ ] Backup na nuvem
+MIT — veja [LICENSE](LICENSE).
 
----
-
-## 🤝 Contribuindo
-
-1. Faça um fork
-2. Crie uma branch (`git checkout -b feature/NovaFeature`)
-3. Commit (`git commit -m "feat: adiciona NovaFeature"`)
-4. Push (`git push origin feature/NovaFeature`)
-5. Abra um Pull Request
-
-🐛 **Reportar bugs:** [Issues](https://github.com/carlosmorais-git/AplicativoFocus/issues)
-
----
-
-## 📈 Versão 2.0 — Refatoração Completa (Out/2025)
-
-**Principais mudanças:**
-
-- Drawer → Bottom Tabs
-- Tema escuro moderno (#021123 / #B872FF)
-- Animações com a API `Animated` (nativas, via `useNativeDriver`)
-- UX aprimorada e feedback visual em todas as ações
-
----
-
-## 🧾 Licença
-
-Licenciado sob **MIT** — veja [LICENSE](LICENSE).
-
----
-
-## 📞 Contato
-
-**Carlos Morais** — [GitHub](https://github.com/carlosmorais-git)  
-📦 Projeto: [AplicativoFocus](https://github.com/carlosmorais-git/AplicativoFocus)
-
----
-
-_Desenvolvido com ❤️ usando React Native e Expo._
+**Carlos Morais** · [github.com/carlosmorais-git](https://github.com/carlosmorais-git)

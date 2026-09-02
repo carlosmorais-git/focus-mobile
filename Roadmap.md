@@ -1,8 +1,11 @@
 # 🎯 Roadmap — App FOCO
 
-Plano de saída do estado "projeto de curso" para produto mantível.
-Cada item aponta o arquivo onde está a evidência. Nada aqui é palpite — foi levantado
-por leitura do código.
+**Escopo: portfólio.** O app existe para ser lido por outra pessoa, não para rodar em
+produção. Isso decide o que entra e o que fica documentado sem ser feito — robustez que
+só aparece depois de semanas de uso real não paga o custo aqui.
+
+Cada item aponta o arquivo onde está a evidência. Nada é palpite — foi levantado por
+leitura do código.
 
 Última verificação: **2026-09-02**, branch `dev-2.0`.
 
@@ -16,12 +19,10 @@ por leitura do código.
 | **Estrutura** | `src/` (app, components, context, hooks, assets) |
 | **Navegação** | Stack na raiz, abas como primeira tela da pilha |
 | **Lint** | ✅ zero erro, zero warning |
-| **expo-doctor** | 20/21 — falta só o schema do `app.json` |
+| **expo-doctor** | ✅ 21/21 |
+| **Tema** | centralizado em `src/theme/`, escuro fixo |
+| **Dependências** | 21 diretas, nenhuma sem uso além das duas reservadas |
 | **Testes** | ❌ nenhum |
-
-Estimativas de tempo são para uma pessoa sozinha. Servem para **ordenar**, não para prometer prazo.
-
----
 
 ## ✅ Fechado em 2026-09-02
 
@@ -40,183 +41,112 @@ Levantado item a item contra o código; não é lista de intenção.
 | Stack por cima das Tabs | grupo `(tabs)` com layout próprio; add/edit empilham com voltar nativo | `ec285a5` |
 | `VoltaRoteador` apagado | interceptar `beforeRemove` e navegar dentro do listener causa laço infinito com Stack | `f627321` |
 | Chamadas de rota alinhadas à pilha | `back()` ao salvar, `push()` com caminho absoluto ao abrir | `e22c8e7` |
+| **Fase 0** — `app.json` no schema do SDK 57 | `newArchEnabled` e `android.edgeToEdgeEnabled` apagados; `expo-doctor` 21/21 | não commitado |
+| **Fase 0** — `.nvmrc` 20 → 22 | RN 0.86 exige Node 20.19+ | não commitado |
+| **Fase 1** — hooks de contexto sem duplicata | um arquivo por domínio: provedor como `export` nomeado, hook como `export default` do mesmo arquivo | não commitado |
+| **Fase 1** — nove dependências mortas fora | `expo-image` também saiu dos `plugins` do `app.json` | não commitado |
+| **Fase 1** — rodapé sem marca do curso | linha "Desenvolvido por Alura" removida | não commitado |
+| **Fase 1** — falha de gravação deixa de ser silenciosa | `console.error` + `erroPersistencia` no contexto | não commitado |
+| **Fase 1** — `todo.md` apagado | apontava para um relatório inexistente | não commitado |
+| **Fase 1** — roadmap do README corrigido | AsyncStorage marcado como pronto, com link para este arquivo | não commitado |
+| **Fase 2** — tokens de design | `src/theme/index.js` com `cores`, `espaco`, `raio`, `fonte`, `sombra`; `src/assets/style.jsx` apagado | não commitado |
+| **Fase 2** — literais eliminados | zero hex, rgba, espaçamento ou fonte solta fora de `src/theme/` | não commitado |
+| **Fase 2** — promessa de tema resolvida | `userInterfaceStyle` de `automatic` para `dark` | não commitado |
+| Ícone em 1024×1024 | `logo.png` no lugar de `adaptive-icon.png`, nas 4 referências do `app.json` | não commitado |
 
 ---
 
-## Fase 0 — Fechar o upgrade
+## Fases 0, 1, 1.5 e 2 — fechadas
 
-> 🔴 **Bloqueia tudo** · ~30 min
+Detalhe na tabela acima. As pontas que sobraram viraram itens da lista abaixo.
 
-- [ ] **Limpar o `app.json`** — é o único check que o `expo-doctor` ainda reprova
+Duas decisões que ficaram registradas para não voltarem como dúvida:
 
-      should NOT have additional property 'newArchEnabled'.
-      Field: android - should NOT have additional property 'edgeToEdgeEnabled'.
-
-      No SDK 57 os dois viraram padrão e saíram do schema. Só apagar as duas chaves.
-- [ ] **Subir o `.nvmrc` de 20 para 22**
-      O arquivo pede Node 20; o RN 0.86 exige 20.19+. Quem clonar seguindo o `.nvmrc` pega versão de fronteira.
-- [ ] **`npx expo-doctor` fechando 21/21**
-
----
-
-## Fase 1 — Enxugar
-
-> 🟢 **Risco baixo** · ~1 h 30
-
-- [ ] **Decidir um padrão único para os hooks de contexto** — ⚠️ divergência iminente
-      Os dois providers exportam o hook inline como `default`, **e** os dois arquivos separados
-      continuam existindo com o mesmo hook. Todos os consumidores importam do arquivo separado,
-      então a cópia inline é código morto esperando divergir.
-      `src/context/tarefas/ProvedorTarefas.jsx:98` vs `useContextoTarefa.js:4`
-      `src/context/modal/ProvedorModal.jsx:61` vs `useModal.jsx:4`
-- [ ] **Remover as onze dependências mortas** (tabela no fim deste arquivo)
-- [ ] **Trocar o rodapé de template**
-      Todas as telas assinam "Desenvolvido por Alura" — marca do curso original, não do projeto.
-      `src/components/Footer/index.jsx:10`
-- [ ] **Parar de engolir falha de gravação** — ⚠️ perda de dado
-      O `catch` do `storeData` continua vazio (só ganhou `_e` para calar o lint).
-      Se o AsyncStorage falhar, a tarefa some no próximo boot e ninguém fica sabendo.
-      `src/context/tarefas/ProvedorTarefas.jsx:28`
-- [ ] **Apagar o `todo.md`**
-      Todas as fases marcadas como concluídas e aponta para um `RELATORIO_FINALIZACAO.md` inexistente.
-- [ ] **Atualizar o roadmap do README**
-      `README.md:126` lista "Persistência de dados (AsyncStorage)" como pendente.
-      Está implementada desde sempre, na chave `foco-tarefas`.
+- **Três números seguem fora da escala de tokens, de propósito** — `flex: 0.95` na lista,
+  `paddingTop: 50` e `height: 266` no pomodoro, `height: 120` na tab bar. São medidas de
+  uma tela só; virar token seria indireção sem ganho. Se aparecerem de novo, aí sim.
+- **A splash continua sendo a rota raiz** — `index.jsx:29` usa `router.replace("/pomodoro")`,
+  que a descarta corretamente da pilha. Todo cold start passa por ela; é o comportamento
+  pretendido, não um resto da migração.
 
 ---
 
-## Fase 1.5 — Terminar a migração de navegação
+## O que ainda vale fazer
 
-> 🟡 Quase fechada · ~15 min
+Ordenado pelo que um leitor do repositório percebe primeiro.
 
-A troca de Tabs para Stack fechou a estrutura. Sobrou um item.
-
-- [ ] **Decidir o que a tela inicial faz na pilha**
-      `index.jsx:29` usa `router.replace("/pomodoro")`, que descarta a splash — correto.
-      Mas ela continua sendo a rota raiz, então todo cold start passa por ela.
-
----
-
-## Fase 2 — Tema centralizado
-
-> ~3 h
-
-Pré-requisito honesto para qualquer mudança visual. Hoje, trocar o roxo do app significa
-caçar o mesmo hex em quinze arquivos.
-
-- [ ] **Criar `src/theme/` e matar o arquivo vazio**
-      `src/assets/style.jsx` tem zero bytes desde o primeiro commit. Cada `StyleSheet.create`
-      repete `#021123`, `#B872FF`, `#144480` e `#98A0A8` na mão — agora inclusive no
-      `(tabs)/_layout.jsx`.
-- [ ] **Extrair escala de espaçamento e raio**
-      Números soltos por toda parte: `flex: 0.95` na lista, `bottom: 103` no botão animado,
-      `borderRadius: 32` repetido, `height: 120` na tab bar. Viram tokens.
-- [ ] **Resolver a promessa de tema automático**
-      `app.json` declara `userInterfaceStyle: "automatic"`, mas o app é escuro fixo.
-      Ou entrega o tema claro, ou trava em `"dark"` e para de prometer.
-
----
-
-## Fase 3 — Consertar o Pomodoro
-
-> 🔴 **É o produto** · ~6 h
-
-O cronômetro é metade do motivo do app existir e é a parte menos robusta do código.
-Nada aqui foi tocado ainda.
-
-- [ ] **Formatar o tempo sem `Date`** — 🔴 bug latente
-      O display converte segundos para `new Date(segundo * 1000)` e chama `toLocaleTimeString`.
-      Isso lê o fuso do aparelho. Funciona no Brasil só porque o offset é de horas inteiras —
-      em Índia (+5:30) ou Terra Nova (−3:30) o minuto sai errado. E qualquer sessão de 60 min
-      ou mais estoura o campo de minutos. Trocar por aritmética pura.
-      `src/components/Tempo/index.jsx:5-14`
-- [ ] **Tirar o efeito colateral de dentro do updater** — ⚠️ React 19
-      `limpar()` é chamado dentro do callback de `setSegundo`. Updater tem que ser puro —
-      o StrictMode do React 19 invoca duas vezes e o `clearInterval` roda em duplicidade.
-      `src/app/(tabs)/pomodoro.jsx:47`
-- [ ] **Contar por timestamp, não por tick**
-      `setInterval` de 1 s acumula desvio e congela quando o app vai para segundo plano.
-      Guardar o instante-alvo e derivar o restante do relógio resolve os dois de uma vez.
-- [ ] **Avisar quando a sessão termina**
-      Hoje o tempo zera e volta ao valor inicial em silêncio. Sem som, sem vibração, sem notificação —
-      quem trocou de app não fica sabendo. `expo-haptics` já está instalado e sem uso.
-      ⚠️ O sistema de toast foi removido: o aviso tem que ser háptico, sonoro ou notificação
-      de sistema, não um banner in-app.
-- [ ] **Encadear os modos e contar ciclos**
-      Foco não avança sozinho para pausa, e nada conta quantos pomodoros saíram.
-      É o ciclo que dá sentido à técnica.
-- [ ] **Tornar 25/5/15 configurável**
-      Os tempos são literais no array `valueDic`. Já está listado como pergunta no FAQ do README.
-
----
-
-## Fase 4 — Dados e robustez
-
-> ~4 h
-
-Persistência local sem rede de segurança. Os defeitos aqui não aparecem em teste manual —
-aparecem no aparelho do usuário, depois de semanas de uso.
-
-- [ ] **Trocar o gerador de id**
-      `Date.now() + Math.floor(Math.random() * 1000)` colide se duas tarefas nascerem no mesmo
-      milissegundo com o mesmo sorteio. E esse id vira chave de rota na edição (`edit_tarefa/[id]`).
-      `uuid` e `react-native-uuid` já estão no `package.json`, ambos sem uso — escolher um.
-      `src/context/tarefas/ProvedorTarefas.jsx` — `addTarefa`
-- [ ] **Versionar o schema no AsyncStorage**
-      A chave `foco-tarefas` guarda o array cru. Quando o formato da tarefa mudar,
-      a base antiga entra sem migração e quebra em silêncio.
-- [ ] **Montar um ErrorBoundary**
-      Qualquer exceção de render derruba o app para tela branca. `expo-router` já expõe `ErrorBoundary`.
-
----
-
-## Fase 5 — Profissionalizar
-
-> ~8 h
-
-O que separa um repo de portfólio de um repo que dá para outra pessoa manter.
-Depende das fases anteriores: não vale escrever teste para código que vai mudar na fase 3.
-
-- [ ] **Primeira suíte de testes** — 🔴 zero hoje
-      Começar pelo que tem lógica pura e regressão cara: as funções do contexto de tarefas
-      e a formatação de tempo. `jest-expo` + `@testing-library/react-native`.
+- [ ] **Separar os três assets do ícone**
+      `icon`, `favicon` e `splash` apontam todos para o mesmo `logo.png`. O tamanho agora
+      está certo (1024×1024), mas splash e favicon pedem recortes diferentes do ícone.
+      `app.json`
+- [ ] **Screenshots no README**
+      Existe `src/assets/Designer/` com três prints e um `banner.jpg` na raiz, nenhum
+      referenciado no README. Para um repo de portfólio, é o que segura o leitor.
 - [ ] **Acessibilidade** — 🔴 zero hoje
-      Zero ocorrências de `accessibilityLabel`, `accessibilityRole` ou `accessible` em todo o `src/`.
-      Os botões de concluir e excluir são `Pressable` com ícone SVG e nenhum texto —
-      leitor de tela não anuncia nada.
-- [ ] **CI no GitHub Actions** — lint e build a cada push. Hoje nada roda sozinho,
-      e o lint só está zerado porque foi rodado à mão.
-- [ ] **Gerar os ícones de verdade**
-      `icon`, `favicon` e `splash` apontam todos para o mesmo `adaptive-icon.png` de 225×225.
-      A Expo pede 1024×1024 — hoje só não quebra porque nada foi publicado.
+      Zero ocorrências de `accessibilityLabel`, `accessibilityRole` ou `accessible` no `src/`.
+      Os botões de concluir e excluir são `Pressable` com ícone SVG e nenhum texto: leitor de
+      tela não anuncia nada. Barato de corrigir e é sinal técnico visível.
+- [ ] **CI no GitHub Actions**
+      Lint e build a cada push. O badge verde no README diz mais que qualquer parágrafo, e
+      hoje o lint só está zerado porque foi rodado à mão.
+- [ ] **Dar destino ao `erroPersistencia`**
+      O contexto de tarefas expõe a última falha de gravação, mas nenhuma tela lê.
+      `src/context/tarefas/ProvedorTarefas.jsx`
+- [ ] **Entregar o tema claro**
+      Transformar `cores` num mapa `{ dark, light }` + `useColorScheme()`.
+      `src/theme/index.js`
 
 ---
 
-## Fase 6 — Melhorias
+## Conhecido e adiado
 
-> A definir
+Levantado por leitura do código e **deliberadamente não corrigido**: são defeitos que só
+mordem em uso prolongado ou fora do Brasil. Ficam aqui para não serem redescobertos como
+novidade — e porque saber que existem vale mais que consertar.
 
-Espaço para as ideias novas. Cada uma entra aqui e depois é realocada para a fase
-onde realmente cabe, respeitando dependências.
+### Cronômetro
 
-- [ ] _(a preencher)_
+- **Fuso vaza no formato do tempo** — `src/components/Tempo/index.jsx:5-14`
+  Converte segundos para `new Date(segundo * 1000)` e chama `toLocaleTimeString`, que lê o
+  fuso do aparelho. Só funciona onde o offset é de horas inteiras: na Índia (+5:30) ou em
+  Terra Nova (−3:30) o minuto sai errado. Sessão de 60 min ou mais estoura o campo.
+- **Efeito colateral dentro do updater** — `src/app/(tabs)/pomodoro.jsx:47`
+  `limpar()` roda dentro do callback de `setSegundo`. Updater tem que ser puro; o StrictMode
+  do React 19 invoca duas vezes e o `clearInterval` duplica.
+- **Conta por tick, não por timestamp**
+  `setInterval` de 1 s acumula desvio e congela em segundo plano.
+- **Termina em silêncio** — sem som, vibração ou notificação. `expo-haptics` está instalado
+  justamente para isso e segue sem uso.
+- **Sem encadear modos nem contar ciclos** — é o ciclo que dá sentido à técnica.
+- **25/5/15 fixos** no array `valueDic`.
+
+### Dados
+
+- **Gerador de id colide** — `Date.now() + Math.floor(Math.random() * 1000)` repete se duas
+  tarefas nascerem no mesmo milissegundo com o mesmo sorteio, e esse id é chave de rota em
+  `edit_tarefa/[id]`. `react-native-uuid` está instalado para quando isso importar.
+- **Sem versão de schema no AsyncStorage** — a chave `foco-tarefas` guarda o array cru;
+  mudar o formato quebra a base antiga em silêncio.
+- **Sem ErrorBoundary** — exceção de render derruba para tela branca. `expo-router` já expõe um.
+- **Sem testes** — nenhum. O alvo natural seriam as funções do contexto de tarefas e a
+  formatação de tempo, que é lógica pura.
 
 ---
 
-## 🧹 As onze dependências mortas
+## 🧹 Dependências
 
-Nenhuma aparece em nenhum `import` dentro de `src/`. Verificado por varredura no diretório inteiro em 2026-09-02.
+Nove removidas em 2026-09-02. Duas ficaram de propósito.
 
-| Pacote | Situação |
+| Pacote | Destino |
 |---|---|
-| `react-native-keyboard-aware-scroll-view` | Abandonado, sem suporte à New Architecture. **Remover primeiro.** |
-| `react-native-vector-icons` | Redundante — o app usa `@expo/vector-icons`. |
-| `react-native-reanimated` | Sem uso. Todas as animações são do `Animated` da RN core. Puxa o `react-native-worklets` junto. |
-| `uuid` | Instalado e nunca importado. Candidato a uso na fase 4. |
-| `react-native-uuid` | Segunda biblioteca para o mesmo fim. Escolher uma. |
-| `expo-blur` | Sem uso. |
-| `expo-haptics` | Sem uso — mas é exatamente o que falta na fase 3. |
-| `expo-image` | Sem uso, e o `expo install --fix` ainda registrou o config plugin no `app.json`. |
-| `expo-symbols` | Sem uso. |
-| `expo-web-browser` | Sem uso. |
-| `expo-status-bar` | Sem uso — a barra nunca é configurada em tela nenhuma. |
+| `expo-haptics` | **mantido** — é o que faria o cronômetro avisar o fim da sessão, hoje em "Conhecido e adiado" |
+| `react-native-uuid` | **mantido** — vira o gerador de id quando a colisão importar, hoje em "Conhecido e adiado" |
+| `react-native-keyboard-aware-scroll-view` | removido — abandonado, sem New Architecture |
+| `react-native-vector-icons` | removido — redundante com `@expo/vector-icons` |
+| `react-native-reanimated` | removido — todas as animações são do `Animated` da RN core |
+| `uuid` | removido — segunda biblioteca para o mesmo fim, ficou a outra |
+| `expo-blur` · `expo-symbols` · `expo-web-browser` · `expo-status-bar` | removidos — sem uso |
+| `expo-image` | removido, junto com o config plugin órfão no `app.json` |
+
+`react-native-worklets` **continua** e não é lixo: é peer de `expo-modules-core` e de
+`@expo/ui` (que o `expo-router` puxa), não do reanimated. Não remover.

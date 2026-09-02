@@ -9,6 +9,7 @@ import AbasModo from "../../components/Actions";
 import FocoBotao from "../../components/FocoBotao";
 import Tempo from "../../components/Tempo";
 import Footer from "../../components/Footer";
+import { cores, espaco, fonte, raio } from "@/theme";
 
 const valueDic = [
   { id: 1, name: "Foco", tempo: 25 * 60, image: Img_foco },
@@ -91,39 +92,39 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#021123",
+    backgroundColor: cores.fundo,
     paddingTop: 50,
-    gap: 40,
+    gap: espaco.gigante,
   },
 
   imagem: {
     width: 266,
     height: 266,
-    padding: 10,
+    padding: espaco.sm,
   },
   actions: {
-    paddingVertical: 24,
-    paddingHorizontal: 24,
-    backgroundColor: "rgba(20, 68, 128, 0.5)",
-    borderRadius: 32,
+    paddingVertical: espaco.xxl,
+    paddingHorizontal: espaco.xxl,
+    backgroundColor: cores.painel,
+    borderRadius: raio.pilula,
     width: "80%",
     borderWidth: 2,
-    borderColor: "#144480",
-    gap: 32,
+    borderColor: cores.borda,
+    gap: espaco.xxxl,
   },
   modoContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    gap: 10,
+    gap: espaco.sm,
   },
   footer: {
     bottom: 0,
     width: "80%",
-    padding: 16,
+    padding: espaco.lg,
     alignItems: "center",
   },
   footerText: {
-    color: "#98A0A8",
-    fontSize: 14,
+    color: cores.textoSecundario,
+    fontSize: fonte.sm,
   },
 });

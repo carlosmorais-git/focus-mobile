@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSave } from "../../components/Icons";
 import useScrollToCursor from "../../hooks/useScrollToCursor";
+import { cores, espaco, fonte, raio, sombra } from "@/theme";
 import FocoBotao from "../../components/FocoBotao";
 import useValorAnimado from "../../hooks/useValorAnimado";
 
@@ -99,7 +100,7 @@ const DigitarTarefa = ({
               value={descricao}
               onChangeText={setDescricao}
               placeholder="Digite algo novo..."
-              placeholderTextColor="#999"
+              placeholderTextColor={cores.placeholder}
               textAlignVertical="top"
               onContentSizeChange={(e) => {
                 const altura = e.nativeEvent.contentSize.height;
@@ -140,7 +141,7 @@ const DigitarTarefa = ({
               styles.botao,
               {
                 backgroundColor:
-                  descricao.length <= 0 ? "rgb(178, 179, 180)" : "#021123",
+                  descricao.length <= 0 ? cores.iconeInativo : cores.textoSobreClaro,
               },
             ]}
           >
@@ -164,28 +165,28 @@ export default DigitarTarefa;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#021123",
-    paddingHorizontal: 16,
+    backgroundColor: cores.fundo,
+    paddingHorizontal: espaco.lg,
     // paddingBottom: 5,
-    gap: 10,
+    gap: espaco.sm,
   },
   header: {
-    marginTop: 8,
-    marginBottom: 16,
+    marginTop: espaco.xs,
+    marginBottom: espaco.lg,
   },
   label: {
-    fontSize: 20,
+    fontSize: fonte.xl,
     fontWeight: "bold",
-    color: "#fff",
+    color: cores.texto,
   },
   flexGrow: {
     flex: 1,
   },
   inner: {
-    borderRadius: 8,
+    borderRadius: raio.sm,
     flex: 1,
-    paddingBottom: 40,
-    gap: 20,
+    paddingBottom: espaco.gigante,
+    gap: espaco.xl,
     justifyContent: "space-between",
   },
   scroll: {
@@ -193,23 +194,23 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    borderRadius: 8,
-    backgroundColor: "#fff",
-    color: "#000",
+    borderRadius: raio.sm,
+    backgroundColor: cores.campo,
+    color: cores.textoCampo,
     textAlignVertical: "top",
-    fontSize: 18,
-    padding: 16,
+    fontSize: fonte.lg,
+    padding: espaco.lg,
     minHeight: 120,
   },
   containerBotao: {
     elevation: 5,
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
+    boxShadow: sombra.botao,
     alignItems: "center",
   },
   botao: {
-    borderRadius: 32,
+    borderRadius: raio.pilula,
     justifyContent: "center",
     width: "95%",
-    gap: 40,
+    gap: espaco.gigante,
   },
 });
