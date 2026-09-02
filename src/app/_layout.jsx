@@ -1,7 +1,7 @@
 // Refatoração para usar Bottom Tabs em vez de Drawer Navigator
 import { router } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Tabs } from "expo-router/tabs";
+import { Tabs } from "expo-router/js-tabs";
 import { StyleSheet } from "react-native";
 // Ícones personalizados
 import { Ionicons } from "@expo/vector-icons";

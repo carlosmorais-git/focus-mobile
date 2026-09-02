@@ -35,35 +35,46 @@ Depois, escaneie o QR Code com o **Expo Go** ou use o emulador (`a` para Android
 
 ## 🧩 Stack
 
-React Native • Expo • React Native Reanimated
+React Native • Expo • Expo Router • Context API • AsyncStorage
 
 ---
 
 ## 🏗️ Estrutura
 
 ```
-app/
-├── _layout.jsx         # Layout principal com navegação
-├── index.jsx           # Tela inicial (Pomodoro)
-├── tarefas/            # Lista de tarefas
-├── add_tarefa/         # Adicionar tarefa
-├── edit_tarefa/        # Editar tarefa
-└── pomodoro.jsx        # Lógica do cronômetro
-
-assets/
-├── Designer/           # Fotos do app funcionando
-
-components/
-├── Actions/            # Botões de ação
-├── FocoBotao/          # Botão principal do timer
-├── ModalGlobal/        # Modal reutilizável
-├── NotificacaoGlobal/  # Sistema de notificações
-└── TarefaItem/         # Item individual da tarefa
-
-context/
-├── modal/              # Controle de modais
-├── notificacao/        # Controle de notificações
-└── tarefas/            # Controle global de tarefas
+src/
+├── app/                    # Rotas (expo-router)
+│   ├── _layout.jsx         # Layout raiz: providers + bottom tabs
+│   ├── index.jsx           # Tela inicial
+│   ├── pomodoro.jsx        # Aba Foco — cronômetro
+│   ├── tarefas/            # Aba Tarefas — lista
+│   ├── add_tarefa/         # Adicionar tarefa
+│   ├── edit_tarefa/        # Editar tarefa ([id].jsx)
+│   └── dialog_pagina/      # Tela de teste de modais/notificações
+│
+├── components/             # Componentes (cada um em pasta com index.jsx)
+│   ├── Actions/            # Botões de modo do Pomodoro
+│   ├── DigitarTarefa/      # Formulário de tarefa
+│   ├── FocoBotao/          # Botão principal
+│   ├── Footer/             # Rodapé
+│   ├── Icons/              # Ícones SVG
+│   ├── ModalGlobal/        # Modal reutilizável
+│   ├── NotificacaoGlobal/  # Sistema de notificações
+│   ├── TarefaItem/         # Item da lista
+│   ├── Tempo/              # Display do cronômetro
+│   └── VoltaRoteador/      # Botão físico de voltar (Android)
+│
+├── context/                # Estado global (Context API)
+│   ├── modal/              # Controle de modais
+│   ├── notificacao/        # Controle de notificações
+│   └── tarefas/            # Controle global de tarefas + AsyncStorage
+│
+├── hooks/                  # Hooks reutilizáveis
+│
+└── assets/                 # Imagens, fontes
+    ├── Designer/           # Prints do app funcionando
+    ├── fonts/
+    └── images/
 ```
 
 ---
@@ -76,8 +87,21 @@ npm run android    # Executar no Android
 npm run ios        # Executar no iOS
 npm run web        # Executar na web
 npm run lint       # Verificar código
-npm run reset-project  # Resetar o projeto
 ```
+
+### Versionamento
+
+```bash
+npm run release:patch   # 1.0.0 -> 1.0.1  (correção)
+npm run release:minor   # 1.0.0 -> 1.1.0  (funcionalidade nova)
+npm run release:major   # 1.0.0 -> 2.0.0  (quebra compatibilidade)
+```
+
+Cada um faz o ciclo completo: sobe a versão no `package.json`, sincroniza o `app.json`
+(`expo.version`, `android.versionCode` +1, `ios.buildNumber`), commita os dois juntos
+e cria a tag git.
+
+⚠️ Exige a árvore do git limpa — commite ou guarde as alterações antes.
 
 ---
 
@@ -90,7 +114,7 @@ npm run reset-project  # Resetar o projeto
 🕒 Ainda não, mas está no roadmap.
 
 **Consome muita bateria?**  
-🔋 Não! As animações são otimizadas com Reanimated.
+🔋 Não! As animações usam a API `Animated` da React Native com `useNativeDriver`, rodando na thread nativa.
 
 **Funciona em tablets?**  
 📱 Sim, com layout responsivo.
@@ -125,7 +149,7 @@ npm run reset-project  # Resetar o projeto
 
 - Drawer → Bottom Tabs
 - Tema escuro moderno (#021123 / #B872FF)
-- Animações com Reanimated
+- Animações com a API `Animated` (nativas, via `useNativeDriver`)
 - UX aprimorada e feedback visual em todas as ações
 
 ---

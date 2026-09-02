@@ -1,4 +1,4 @@
-import React, { createContext, useState, useRef } from "react";
+import React, { createContext, useState, useRef, useContext } from "react";
 
 export const NotificacaoContext = createContext();
 
@@ -68,4 +68,16 @@ export function ProvedorNotificacao({ children }) {
       {children}
     </NotificacaoContext.Provider>
   );
+}
+
+export default function useContextoNotificacao() {
+  const context = useContext(NotificacaoContext); // busca o valor do contexto.
+
+  if (!context) {
+    throw new Error(
+      "useContextoTarefa deve ser usado dentro do ProvedorNotificacao."
+    );
+  }
+
+  return context;
 }

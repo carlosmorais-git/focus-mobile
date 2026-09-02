@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState,useContext  } from "react";
 // Atencao so sabe usar string
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // Criação do contexto das tarefas
@@ -51,14 +51,14 @@ export function ProvedorTarefas({ children }) {
 
   // Alterna o status de conclusão da tarefa com base no ID
   const completarTarefa = (id) => {
-    setTarefas((prev) => {
-      return prev.map((t) => {
-        if (t.id === id) {
-          t.completed = !t.completed;
-        }
-        return t;
-      });
-    });
+    setTarefas((prev) =>
+      prev.map(
+        (tarefa) =>
+          tarefa.id === id
+            ? { ...tarefa, completed: !tarefa.completed } // alterna só a conclusão
+            : tarefa // mantém as outras tarefas
+      )
+    );
   };
 
   // Remove uma tarefa da lista com base no ID
@@ -93,4 +93,16 @@ export function ProvedorTarefas({ children }) {
       {children}
     </TaskContext.Provider>
   );
+}
+
+export default function useContextoTarefa() {
+  const context = useContext(TaskContext); // busca o valor do contexto.
+
+  if (!context) {
+    throw new Error(
+      "useContextoTarefa deve ser usado dentro do ProvedorTarefas."
+    );
+  }
+
+  return context;
 }

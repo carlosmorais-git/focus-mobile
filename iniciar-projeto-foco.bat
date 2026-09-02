@@ -1,13 +1,12 @@
 @echo off
-REM Navega até a pasta do projeto
-cd /d C:\Users\carlo\Documents\GitHub\_Aplicativo\Foco
+REM Navega ate a pasta do projeto (pasta onde este .bat esta)
+cd /d "%~dp0"
 
-REM Ativa o Node.js versão 20 via NVM
+REM Ativa o Node.js versao 20 via NVM
 @REM nvm use 20
 
 REM Inicia o projeto com o Expo
 npm start
 
-REM Mantém o terminal aberto após o término
+REM Mantem o terminal aberto apos o termino
 pause
-

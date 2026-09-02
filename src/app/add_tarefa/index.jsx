@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Animated } from "react-native";
 import useContextoTarefa from "../../context/tarefas/useContextoTarefa";
 import { router } from "expo-router";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router";
 import DigitarTarefa from "../../components/DigitarTarefa";
 import useContextoNotificacao from "../../context/notificacao/useContextoNotificacao";
 
