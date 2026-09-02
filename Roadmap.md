@@ -39,7 +39,7 @@ Levantado item a item contra o código; não é lista de intenção.
 | Rodar em aparelho | Android por cabo USB, `npm run android:usb` | `c8751b8` |
 | Stack por cima das Tabs | grupo `(tabs)` com layout próprio; add/edit empilham com voltar nativo | `ec285a5` |
 | `VoltaRoteador` apagado | interceptar `beforeRemove` e navegar dentro do listener causa laço infinito com Stack | `f627321` |
-| Chamadas de rota alinhadas à pilha | `back()` ao salvar, `push()` com caminho absoluto ao abrir | `a seguir` |
+| Chamadas de rota alinhadas à pilha | `back()` ao salvar, `push()` com caminho absoluto ao abrir | `e22c8e7` |
 
 ---
 
