@@ -1,9 +1,9 @@
 import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import useContextoTarefa from "../../context/tarefas/useContextoTarefa";
-import TarefaItem from "../../components/TarefaItem";
-import FocoBotao from "../../components/FocoBotao";
-import { IconPlus } from "../../components/Icons";
+import useContextoTarefa from "../../../context/tarefas/useContextoTarefa";
+import TarefaItem from "../../../components/TarefaItem";
+import FocoBotao from "../../../components/FocoBotao";
+import { IconPlus } from "../../../components/Icons";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 

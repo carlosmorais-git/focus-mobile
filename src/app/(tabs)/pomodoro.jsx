@@ -1,14 +1,14 @@
 import React, { useState, useRef } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { IconPlay, IconPause } from "../components/Icons"; // Importando os ícones de play e pause
-import Img_foco from "../assets/images/Imagem foco.png";
-import Img_curto from "../assets/images/Imagem descanso curto.png";
-import Img_longo from "../assets/images/Imagem descanso longo.png";
-import AbasModo from "../components/Actions";
-import FocoBotao from "../components/FocoBotao";
-import Tempo from "../components/Tempo";
-import Footer from "../components/Footer";
+import { IconPlay, IconPause } from "../../components/Icons"; // Importando os ícones de play e pause
+import Img_foco from "../../assets/images/Imagem foco.png";
+import Img_curto from "../../assets/images/Imagem descanso curto.png";
+import Img_longo from "../../assets/images/Imagem descanso longo.png";
+import AbasModo from "../../components/Actions";
+import FocoBotao from "../../components/FocoBotao";
+import Tempo from "../../components/Tempo";
+import Footer from "../../components/Footer";
 
 const valueDic = [
   { id: 1, name: "Foco", tempo: 25 * 60, image: Img_foco },
