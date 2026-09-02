@@ -47,7 +47,7 @@ const AddTarefa = () => {
     if (!descricao.trim()) return;
     addTarefa(descricao.trim());
     setDescricao("");
-    router.navigate("../tarefas");
+    router.back();
   };
 
   return (

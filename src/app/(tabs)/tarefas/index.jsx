@@ -31,7 +31,7 @@ export default function Tarefas() {
               texto={item.descricao}
               onPressDelete={() => deletarTarefa(item.id)}
               onTarefaCompleta={() => completarTarefa(item.id)}
-              onPressEdit={() => router.navigate(`../edit_tarefa/${item.id}`)} // pegar o id
+              onPressEdit={() => router.push(`/edit_tarefa/${item.id}`)} // pegar o id
             />
           )}
           ListEmptyComponent={
@@ -45,7 +45,7 @@ export default function Tarefas() {
         <FocoBotao
           titulo={"Adicionar nova tarefa"}
           img={<IconPlus />}
-          onPress={() => router.navigate(`../add_tarefa`)}
+          onPress={() => router.push("/add_tarefa")}
           outline
         />
       </View>

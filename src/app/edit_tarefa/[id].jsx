@@ -61,7 +61,7 @@ const EditarTarefa = () => {
     if (!descricao.trim()) return; // Impede salvar vazio
     editarTarefa(Number(id), descricao.trim());
     setDescricao("");
-    router.navigate("../tarefas"); // Volta para a tela de tarefas
+    router.back(); // Desempilha, voltando para a lista
   };
 
   return (

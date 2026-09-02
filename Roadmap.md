@@ -39,6 +39,7 @@ Levantado item a item contra o código; não é lista de intenção.
 | Rodar em aparelho | Android por cabo USB, `npm run android:usb` | `c8751b8` |
 | Stack por cima das Tabs | grupo `(tabs)` com layout próprio; add/edit empilham com voltar nativo | `ec285a5` |
 | `VoltaRoteador` apagado | interceptar `beforeRemove` e navegar dentro do listener causa laço infinito com Stack | `f627321` |
+| Chamadas de rota alinhadas à pilha | `back()` ao salvar, `push()` com caminho absoluto ao abrir | `a seguir` |
 
 ---
 
@@ -86,17 +87,10 @@ Levantado item a item contra o código; não é lista de intenção.
 
 ## Fase 1.5 — Terminar a migração de navegação
 
-> 🟡 Aberta pela mudança para Stack · ~1 h
+> 🟡 Quase fechada · ~15 min
 
-A troca de Tabs para Stack fechou a estrutura, mas deixou pontas soltas em quem
-navegava assumindo que tudo era irmão.
+A troca de Tabs para Stack fechou a estrutura. Sobrou um item.
 
-- [ ] **Trocar `router.navigate("../tarefas")` por `router.back()`**
-      Sobrou de quando não havia pilha. Hoje empurra rota em vez de desempilhar.
-      `src/app/add_tarefa/index.jsx:50` · `src/app/edit_tarefa/[id].jsx:64`
-- [ ] **Conferir o voltar físico do Android em aparelho**
-      Sem o interceptador global, o comportamento agora é o nativo do Stack. Precisa de
-      teste manual: pilha `/` → abas → add_tarefa, voltando de cada ponto.
 - [ ] **Decidir o que a tela inicial faz na pilha**
       `index.jsx:29` usa `router.replace("/pomodoro")`, que descarta a splash — correto.
       Mas ela continua sendo a rota raiz, então todo cold start passa por ela.
