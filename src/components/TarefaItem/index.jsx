@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Text, View, Pressable, StyleSheet, Animated } from "react-native";
 import { IconCheck, IconTrash } from "../Icons";
 import useModal from "../../context/modal/useModal";
-import useContextoNotificacao from "../../context/notificacao/useContextoNotificacao";
 import useValorAnimado from "../../hooks/useValorAnimado";
 
 const TarefaItem = ({
@@ -13,74 +12,20 @@ const TarefaItem = ({
   onTarefaCompleta,
 }) => {
   const { confirmar, carregando, fechar } = useModal();
-  const { mostrarTarefaCompleta } = useContextoNotificacao();
 
   // Animações
   const scaleAnim = useValorAnimado(1);
   const opacityAnim = useValorAnimado(1);
   const backgroundColorAnim = useValorAnimado(0);
-  const checkScaleAnim = useValorAnimado(1);
-  const celebrationAnim = useValorAnimado(0);
 
-  // Animação quando a tarefa é marcada como completa
+  // Anima a cor de fundo quando a tarefa é marcada como completa
   useEffect(() => {
-    if (completed) {
-      // Animação de celebração
-      Animated.sequence([
-        // Pulso de celebração
-        Animated.parallel([
-          Animated.spring(scaleAnim, {
-            toValue: 1.05,
-            tension: 100,
-            friction: 3,
-            useNativeDriver: false, // Mudado para false para compatibilidade web
-          }),
-          Animated.spring(checkScaleAnim, {
-            toValue: 1.3,
-            tension: 100,
-            friction: 3,
-            useNativeDriver: false, // Mudado para false para compatibilidade web
-          }),
-          Animated.timing(celebrationAnim, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: false, // Mudado para false para compatibilidade web
-          }),
-        ]),
-        // Volta ao normal
-        Animated.parallel([
-          Animated.spring(scaleAnim, {
-            toValue: 1,
-            tension: 100,
-            friction: 8,
-            useNativeDriver: false, // Mudado para false para compatibilidade web
-          }),
-          Animated.spring(checkScaleAnim, {
-            toValue: 1,
-            tension: 100,
-            friction: 8,
-            useNativeDriver: false, // Mudado para false para compatibilidade web
-          }),
-        ]),
-      ]).start();
-
-      // Animação da cor de fundo
-      Animated.timing(backgroundColorAnim, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      // Reset das animações quando não está completa
-      Animated.timing(backgroundColorAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-
-      celebrationAnim.setValue(0);
-    }
-  }, [completed, scaleAnim, checkScaleAnim, backgroundColorAnim, celebrationAnim]);
+    Animated.timing(backgroundColorAnim, {
+      toValue: completed ? 1 : 0,
+      duration: completed ? 500 : 300,
+      useNativeDriver: false,
+    }).start();
+  }, [completed, backgroundColorAnim]);
 
   // Função para excluir tarefa com confirmação
   const excluirTarefa = async () => {
@@ -114,15 +59,6 @@ const TarefaItem = ({
     }
   };
 
-  // Função para marcar tarefa como completa com animação
-  const marcarCompleta = () => {
-    if (!completed) {
-      // Mostra notificação de tarefa completa
-      mostrarTarefaCompleta(texto);
-    }
-    onTarefaCompleta();
-  };
-
   // Interpolação da cor de fundo
   const backgroundColor = backgroundColorAnim.interpolate({
     inputRange: [0, 1],
@@ -141,11 +77,9 @@ const TarefaItem = ({
       ]}
     >
       <View style={styles.campoChek}>
-        {/* Ícone marcar completa com animação */}
-        <Pressable onPress={marcarCompleta}>
-          <Animated.View style={{ transform: [{ scale: checkScaleAnim }] }}>
-            <IconCheck checked={completed} />
-          </Animated.View>
+        {/* Ícone marcar completa */}
+        <Pressable onPress={onTarefaCompleta}>
+          <IconCheck checked={completed} />
         </Pressable>
 
         {/* Editar mensagem */}
@@ -163,28 +97,6 @@ const TarefaItem = ({
       <Pressable onPress={excluirTarefa} style={styles.botaoDelete}>
         <IconTrash />
       </Pressable>
-
-      {/* Efeito de celebração */}
-      {completed && (
-        <Animated.View
-          style={[
-            styles.celebrationOverlay,
-            {
-              opacity: celebrationAnim,
-              transform: [
-                {
-                  scale: celebrationAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 1],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <Text style={styles.celebrationText}>✨</Text>
-        </Animated.View>
-      )}
     </Animated.View>
   );
 };
@@ -232,23 +144,5 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 8,
     backgroundColor: "rgba(220, 53, 69, 0.1)",
-  },
-  celebrationOverlay: {
-    position: "absolute",
-    top: -10,
-    right: -10,
-    width: 30,
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#B872FF",
-    borderRadius: 15,
-    elevation: 5,
-    boxShadow: "0px 4px 8px rgba(184, 114, 255, 0.5)",
-    zIndex: 100,
-  },
-  celebrationText: {
-    fontSize: 16,
-    color: "#fff",
   },
 });

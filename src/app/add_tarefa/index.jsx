@@ -3,13 +3,11 @@ import { Animated } from "react-native";
 import useContextoTarefa from "../../context/tarefas/useContextoTarefa";
 import { router, useFocusEffect } from "expo-router";
 import DigitarTarefa from "../../components/DigitarTarefa";
-import useContextoNotificacao from "../../context/notificacao/useContextoNotificacao";
 import useValorAnimado from "../../hooks/useValorAnimado";
 
 const AddTarefa = () => {
   // Contexto para acessar tarefas e adicionar nova tarefa
   const { addTarefa } = useContextoTarefa();
-  const { showNotificacao } = useContextoNotificacao();
 
   // Estado para armazenar a descrição da nova tarefa
   const [descricao, setDescricao] = useState("");
@@ -49,11 +47,6 @@ const AddTarefa = () => {
     if (!descricao.trim()) return;
     addTarefa(descricao.trim());
     setDescricao("");
-    showNotificacao({
-      tipo: "sucesso",
-      titulo: "Sucesso!",
-      mensagem: "Tarefa adicionada com sucesso!",
-    });
     router.navigate("../tarefas");
   };
 
