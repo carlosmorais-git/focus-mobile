@@ -7,7 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "android:usb": "adb wait-for-device && npm run adb:reverse && expo start --android --localhost",
+    "android:usb": "node scripts/android-usb.js",
     "adb:reverse": "adb reverse tcp:8081 tcp:8081",
     "adb:devices": "adb devices -l",
     "lint": "expo lint",
