@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
-import { Image, StyleSheet, View, SafeAreaView } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { IconPlay, IconPause } from "../components/Icons"; // Importando os ícones de play e pause
 import Img_foco from "../assets/images/Imagem foco.png";
 import Img_curto from "../assets/images/Imagem descanso curto.png";

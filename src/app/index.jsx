@@ -1,5 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import Img_Logo from "../assets/images/Fokus -  logo-02 1.png";
 import Img_TelaInicial from "../assets/images/Imagem tela inicial.png";
