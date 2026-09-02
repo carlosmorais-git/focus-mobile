@@ -7,14 +7,15 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import useModal from "../../context/modal/useModal";
+import useValorAnimado from "../../hooks/useValorAnimado";
 
 export default function ModalGlobal() {
   const { modal } = useModal();
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useValorAnimado(0);
+  const opacityAnim = useValorAnimado(0);
 
   useEffect(() => {
     if (modal.visible) {
@@ -48,7 +49,7 @@ export default function ModalGlobal() {
         }),
       ]).start();
     }
-  }, [modal.visible]);
+  }, [modal.visible, scaleAnim, opacityAnim]);
 
   return (
     <View

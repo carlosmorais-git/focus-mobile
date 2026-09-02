@@ -2,10 +2,10 @@ import React, { useState, useRef } from "react";
 import { Animated } from "react-native";
 
 import useContextoTarefa from "../../context/tarefas/useContextoTarefa";
-import { router, useLocalSearchParams } from "expo-router";
-import { useFocusEffect } from "expo-router";
+import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
 
 import DigitarTarefa from "../../components/DigitarTarefa";
+import useValorAnimado from "../../hooks/useValorAnimado";
 
 const EditarTarefa = () => {
   //  Contexto para acessar tarefas e editar
@@ -20,7 +20,7 @@ const EditarTarefa = () => {
   const { id } = useLocalSearchParams();
 
   // Inicializa o valor da animação (entrada fluida do input)
-  const aparicaoFluida = useRef(new Animated.Value(700)).current;
+  const aparicaoFluida = useValorAnimado(700);
 
   //  Filtra a tarefa específica que será editada
   const tarefaSelecionada = tarefas.find((t) => t.id.toString() === id);
@@ -53,7 +53,7 @@ const EditarTarefa = () => {
 
       // Limpa timeout ao sair da tela
       return () => clearTimeout(foco);
-    }, [id, tarefaSelecionada?.descricao])
+    }, [tarefaSelecionada?.descricao, aparicaoFluida])
   );
 
   // ✅ Confirma e salva a edição da tarefa

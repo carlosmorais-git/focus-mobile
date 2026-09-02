@@ -25,7 +25,7 @@ export function ProvedorTarefas({ children }) {
     try {
       const jsonValue = JSON.stringify(value); // Converte o array de tarefas para JSON
       await AsyncStorage.setItem(TAREFAS_STOREGE_KEY, jsonValue); // Salva no AsyncStorage
-    } catch (e) {
+    } catch (_e) {
       // Erro ao salvar os dados (pode-se exibir um alerta ou log se desejar)
     }
   };
@@ -35,7 +35,7 @@ export function ProvedorTarefas({ children }) {
     if (isLoaded) {
       storeData(tarefas); // Persistência automática das alterações
     }
-  }, [tarefas]); // Dispara sempre que o estado `tarefas` mudar
+  }, [tarefas, isLoaded]); // Dispara sempre que o estado `tarefas` mudar
 
   // Adiciona uma nova tarefa com descrição e ID único
   const addTarefa = (descricao) => {

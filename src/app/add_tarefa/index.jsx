@@ -1,10 +1,10 @@
 import React, { useState, useRef } from "react";
 import { Animated } from "react-native";
 import useContextoTarefa from "../../context/tarefas/useContextoTarefa";
-import { router } from "expo-router";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import DigitarTarefa from "../../components/DigitarTarefa";
 import useContextoNotificacao from "../../context/notificacao/useContextoNotificacao";
+import useValorAnimado from "../../hooks/useValorAnimado";
 
 const AddTarefa = () => {
   // Contexto para acessar tarefas e adicionar nova tarefa
@@ -18,7 +18,7 @@ const AddTarefa = () => {
   const referencia = useRef(null);
 
   // Inicializa o valor da animação (entrada fluida do input)
-  const aparicaoFluida = useRef(new Animated.Value(300)).current;
+  const aparicaoFluida = useValorAnimado(300);
 
   /**
    * Animação + foco no input ao abrir a tela
@@ -42,7 +42,7 @@ const AddTarefa = () => {
       }, 300);
 
       return () => clearTimeout(foco);
-    }, [])
+    }, [aparicaoFluida])
   );
 
   const enviarTarefa = () => {

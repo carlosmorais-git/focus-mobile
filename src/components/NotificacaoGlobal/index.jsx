@@ -4,17 +4,17 @@ import {
   Text,
   View,
   Pressable,
-  Easing,
 } from "react-native";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import useContextoNotificacao from "../../context/notificacao/useContextoNotificacao";
+import useValorAnimado from "../../hooks/useValorAnimado";
 
 export default function NotificacaoGlobal() {
   const { notificacao, fecharNotificacao } = useContextoNotificacao();
-  const translateY = useRef(new Animated.Value(-100)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.8)).current;
+  const translateY = useValorAnimado(-100);
+  const opacity = useValorAnimado(0);
+  const scale = useValorAnimado(0.8);
 
   const { visible, tipo, titulo, mensagem } = notificacao;
 
@@ -69,7 +69,7 @@ export default function NotificacaoGlobal() {
         useNativeDriver: false,
       }),
     ]).start();
-  }, [visible]);
+  }, [visible, translateY, opacity, scale]);
 
   // if (!visible) return null;
 

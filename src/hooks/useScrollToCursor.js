@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 export default function useScrollToCursor(alturaLinha = 24) {
   const scrollRef = useRef(null);
   const [currentScrollY, setCurrentScrollY] = useState(0);
-  const [linhaAtual, setLinhaAtual] = useState(null);
+  const [, setLinhaAtual] = useState(null);
   const [alturaVisivel, setAlturaVisivel] = useState(0);
 
   const calcularLinha = (texto, cursorPosition) => {

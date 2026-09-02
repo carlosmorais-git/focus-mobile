@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { useNavigation } from "expo-router";
+import { useNavigation, router } from "expo-router";
 import { BackHandler } from "react-native";
-import { router } from "expo-router";
 
 /**
  * 🔥 Componente utilitário para sobrescrever o botão nativo de voltar.

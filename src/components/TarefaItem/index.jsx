@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { Text, View, Pressable, StyleSheet, Animated } from "react-native";
-import { IconCheck, IconPencil, IconTrash } from "../Icons";
+import { IconCheck, IconTrash } from "../Icons";
 import useModal from "../../context/modal/useModal";
 import useContextoNotificacao from "../../context/notificacao/useContextoNotificacao";
+import useValorAnimado from "../../hooks/useValorAnimado";
 
 const TarefaItem = ({
   completed,
@@ -15,11 +16,11 @@ const TarefaItem = ({
   const { mostrarTarefaCompleta } = useContextoNotificacao();
 
   // Animações
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const opacityAnim = useRef(new Animated.Value(1)).current;
-  const backgroundColorAnim = useRef(new Animated.Value(0)).current;
-  const checkScaleAnim = useRef(new Animated.Value(1)).current;
-  const celebrationAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useValorAnimado(1);
+  const opacityAnim = useValorAnimado(1);
+  const backgroundColorAnim = useValorAnimado(0);
+  const checkScaleAnim = useValorAnimado(1);
+  const celebrationAnim = useValorAnimado(0);
 
   // Animação quando a tarefa é marcada como completa
   useEffect(() => {
@@ -79,7 +80,7 @@ const TarefaItem = ({
 
       celebrationAnim.setValue(0);
     }
-  }, [completed]);
+  }, [completed, scaleAnim, checkScaleAnim, backgroundColorAnim, celebrationAnim]);
 
   // Função para excluir tarefa com confirmação
   const excluirTarefa = async () => {

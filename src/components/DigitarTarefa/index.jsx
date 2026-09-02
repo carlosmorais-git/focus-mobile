@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -15,6 +15,7 @@ import { IconSave } from "../../components/Icons";
 import useScrollToCursor from "../../hooks/useScrollToCursor";
 import FocoBotao from "../../components/FocoBotao";
 import Roteador from "../../components/VoltaRoteador";
+import useValorAnimado from "../../hooks/useValorAnimado";
 
 const DigitarTarefa = ({
   onPress,
@@ -29,7 +30,7 @@ const DigitarTarefa = ({
     useScrollToCursor(18);
 
   // Animação botão
-  const botaoAnimado = useRef(new Animated.Value(0)).current;
+  const botaoAnimado = useValorAnimado(0);
 
   // Controle da altura do input
   const [inputHeight, setInputHeight] = useState(120);
@@ -37,7 +38,6 @@ const DigitarTarefa = ({
   const ALTURA_MINIMA = 120;
 
   const [tecladoAtivo, setTecladoAtivo] = useState(false);
-  const [scrollEnabled, setScrollEnabled] = useState(false);
 
   // ✅ Detecta teclado para animar altura
   useEffect(() => {
@@ -63,7 +63,7 @@ const DigitarTarefa = ({
       tecladoMostra.remove();
       tecladoEsconde.remove();
     };
-  }, []);
+  }, [botaoAnimado]);
 
   return (
     <SafeAreaView style={[styles.container]}>
