@@ -1,10 +1,10 @@
 # 🎯 Roadmap — App FOCO
 
 Plano de saída do estado "projeto de curso" para produto mantível.
-Seis fases, ordenadas por dependência: cada uma destrava a seguinte.
+Cada item aponta o arquivo onde está a evidência. Nada aqui é palpite — foi levantado
+por leitura do código.
 
-Todo item aponta o arquivo onde está a evidência. Nada aqui é palpite — foi levantado
-por leitura do código depois da migração para Expo SDK 57.
+Última verificação: **2026-09-02**, branch `dev-2.0`.
 
 ---
 
@@ -13,29 +13,44 @@ por leitura do código depois da migração para Expo SDK 57.
 | | |
 |---|---|
 | **Upgrade** | SDK 53 → 57 · RN 0.79 → 0.86.3 · React 19.2.3 · expo-router 57 |
-| **Estrutura** | Migrada para `src/` (app, components, context, hooks, assets) |
-| **Bundle** | Desbloqueado — `@react-navigation/*` removido do código e do `package.json` |
-| **expo-doctor** | 18/21 na última execução, antes do `--fix` final |
+| **Estrutura** | `src/` (app, components, context, hooks, assets) |
+| **Navegação** | Stack na raiz, abas como primeira tela da pilha |
+| **Lint** | ✅ zero erro, zero warning |
+| **expo-doctor** | 20/21 — falta só o schema do `app.json` |
+| **Testes** | ❌ nenhum |
 
 Estimativas de tempo são para uma pessoa sozinha. Servem para **ordenar**, não para prometer prazo.
 
 ---
 
+## ✅ Fechado em 2026-09-02
+
+Levantado item a item contra o código; não é lista de intenção.
+
+| O que | Evidência | Commit |
+|---|---|---|
+| devDependencies alinhadas | `eslint-config-expo` ~57.0.2 · `typescript` ~6.0.3 · `@babel/core` ^7.29.0 · `@types/react` ~19.2.4 | `ec59697` |
+| `dialog_pagina` fora do bundle | pasta apagada, `Tabs.Screen` removida | `1cf686a` |
+| Sistema de toast removido | `context/notificacao/` e `NotificacaoGlobal/` apagados; modal é a única superfície de feedback | `1cf686a` |
+| Mensagem de erro copiada | resolvida junto — o arquivo que a continha deixou de existir | `1cf686a` |
+| Lint zerado | 38 erros + 19 warnings → 0. `useValorAnimado` no lugar de `useRef(new Animated.Value())` | `4038a8f` |
+| Warnings do console web | `boxShadow` no lugar de `shadow*`, `resizeMode` como prop, `!!` no render condicional | `6f76344` |
+| `SafeAreaView` do core | migrado para `react-native-safe-area-context` + `SafeAreaProvider` na raiz | `c1891c9` |
+| Rodar em aparelho | Android por cabo USB, `npm run android:usb` | `c8751b8` |
+| Stack por cima das Tabs | grupo `(tabs)` com layout próprio; add/edit empilham com voltar nativo | `ec285a5` |
+
+---
+
 ## Fase 0 — Fechar o upgrade
 
-> 🔴 **Bloqueia tudo** · ~1 h
+> 🔴 **Bloqueia tudo** · ~30 min
 
-Nada mais entra enquanto o tree estiver desalinhado. Sem isso, todo bug novo é ambíguo:
-código ou versão?
+- [ ] **Limpar o `app.json`** — é o único check que o `expo-doctor` ainda reprova
 
-- [ ] **Alinhar as devDependencies** — duas saltam de major
-      `eslint-config-expo` 9.2.0 → `~57.0.2` · `typescript` 5.8.3 → `~6.0.3` · `@babel/core` → `^7.29.0` · `@types/react` → `~19.2.4`
-      Risco baixo: o projeto é JS puro, o TypeScript só serve o alias `@/*` e os tipos de rota.
-- [ ] **Subir os cinco patches pendentes**
-      `expo-constants` · `expo-font` · `expo-image` · `expo-linking` · `expo-router`
-- [ ] **Rodar em aparelho, não só bundlar** — 🔴 não pulável
-      Bundle verde não prova nada sobre módulo nativo. Reanimated 4 + `react-native-worklets` 0.10.1
-      com `newArchEnabled: true` só falham em runtime.
+      should NOT have additional property 'newArchEnabled'.
+      Field: android - should NOT have additional property 'edgeToEdgeEnabled'.
+
+      No SDK 57 os dois viraram padrão e saíram do schema. Só apagar as duas chaves.
 - [ ] **Subir o `.nvmrc` de 20 para 22**
       O arquivo pede Node 20; o RN 0.86 exige 20.19+. Quem clonar seguindo o `.nvmrc` pega versão de fronteira.
 - [ ] **`npx expo-doctor` fechando 21/21**
@@ -44,38 +59,52 @@ código ou versão?
 
 ## Fase 1 — Enxugar
 
-> 🟢 **Risco baixo** · ~2 h
-
-Só remoção e renomeação. É o que mais muda a impressão de profissionalismo por hora gasta,
-e limpa o terreno para as fases seguintes.
+> 🟢 **Risco baixo** · ~1 h 30
 
 - [ ] **Decidir um padrão único para os hooks de contexto** — ⚠️ divergência iminente
-      Os três providers exportam o hook inline como `default`, **e** os três arquivos separados
+      Os dois providers exportam o hook inline como `default`, **e** os dois arquivos separados
       continuam existindo com o mesmo hook. Todos os consumidores importam do arquivo separado,
-      então a cópia inline é código morto esperando divergir do original.
+      então a cópia inline é código morto esperando divergir.
       `src/context/tarefas/ProvedorTarefas.jsx:98` vs `useContextoTarefa.js:4`
-      `src/context/notificacao/ProvedorNotificacao.jsx` vs `useContextoNotificacao.js`
-      `src/context/modal/ProvedorModal.jsx` vs `useModal.jsx`
-- [ ] **Corrigir a mensagem de erro copiada**
-      O hook de notificação lança `"useContextoTarefa deve ser usado dentro do ProvedorNotificacao"`.
-      Nome errado, em dois arquivos. Quem cair nesse erro vai procurar no lugar errado.
-      `src/context/notificacao/useContextoNotificacao.js:9` · `ProvedorNotificacao.jsx:78`
-- [ ] **Remover as dez dependências mortas** (tabela no fim deste arquivo)
-- [ ] **Tirar `src/app/dialog_pagina/` da rota de produção**
-      Tela de teste de modais e toasts empacotada com o app. Está oculta das abas por `href: null`,
-      mas continua no bundle e alcançável por deep link.
+      `src/context/modal/ProvedorModal.jsx:61` vs `useModal.jsx:4`
+- [ ] **Remover as onze dependências mortas** (tabela no fim deste arquivo)
 - [ ] **Trocar o rodapé de template**
       Todas as telas assinam "Desenvolvido por Alura" — marca do curso original, não do projeto.
-      `src/components/Footer/index.jsx`
+      `src/components/Footer/index.jsx:10`
 - [ ] **Parar de engolir falha de gravação** — ⚠️ perda de dado
-      O `catch` do `storeData` está vazio. Se o AsyncStorage falhar, a tarefa some no próximo boot
-      e ninguém fica sabendo.
-      `src/context/tarefas/ProvedorTarefas.jsx`
+      O `catch` do `storeData` continua vazio (só ganhou `_e` para calar o lint).
+      Se o AsyncStorage falhar, a tarefa some no próximo boot e ninguém fica sabendo.
+      `src/context/tarefas/ProvedorTarefas.jsx:28`
 - [ ] **Apagar o `todo.md`**
       Todas as fases marcadas como concluídas e aponta para um `RELATORIO_FINALIZACAO.md` inexistente.
 - [ ] **Atualizar o roadmap do README**
-      Lista "Persistência de dados (AsyncStorage)" como pendente. Está implementada desde sempre,
-      na chave `foco-tarefas`.
+      `README.md:126` lista "Persistência de dados (AsyncStorage)" como pendente.
+      Está implementada desde sempre, na chave `foco-tarefas`.
+
+---
+
+## Fase 1.5 — Terminar a migração de navegação
+
+> 🟡 Aberta pela mudança para Stack · ~1 h
+
+A troca de Tabs para Stack fechou a estrutura, mas deixou pontas soltas em quem
+navegava assumindo que tudo era irmão.
+
+- [ ] **Revisar o `VoltaRoteador`** — ⚠️ briga com o Stack
+      Ainda cancela `beforeRemove` e força uma rota fixa. Foi tirado do layout raiz e
+      trocado de `push` para `replace`, mas continua montado dentro do `DigitarTarefa`,
+      valendo para add e edit. Com Stack, `router.back()` já faz a coisa certa —
+      provavelmente o componente inteiro deixou de ser necessário.
+      `src/components/VoltaRoteador/index.jsx` · `src/components/DigitarTarefa/index.jsx:159`
+- [ ] **Trocar `router.navigate("../tarefas")` por `router.back()`**
+      Sobrou de quando não havia pilha. Hoje empurra rota em vez de desempilhar.
+      `src/app/add_tarefa/index.jsx:50` · `src/app/edit_tarefa/[id].jsx:64`
+- [ ] **Conferir o voltar físico do Android em aparelho**
+      Sem o interceptador global, o comportamento agora é o nativo do Stack. Precisa de
+      teste manual: pilha `/` → abas → add_tarefa, voltando de cada ponto.
+- [ ] **Decidir o que a tela inicial faz na pilha**
+      `index.jsx:29` usa `router.replace("/pomodoro")`, que descarta a splash — correto.
+      Mas ela continua sendo a rota raiz, então todo cold start passa por ela.
 
 ---
 
@@ -88,11 +117,11 @@ caçar o mesmo hex em quinze arquivos.
 
 - [ ] **Criar `src/theme/` e matar o arquivo vazio**
       `src/assets/style.jsx` tem zero bytes desde o primeiro commit. Cada `StyleSheet.create`
-      repete `#021123`, `#B872FF`, `#144480` e `#98A0A8` na mão.
+      repete `#021123`, `#B872FF`, `#144480` e `#98A0A8` na mão — agora inclusive no
+      `(tabs)/_layout.jsx`.
 - [ ] **Extrair escala de espaçamento e raio**
       Números soltos por toda parte: `flex: 0.95` na lista, `bottom: 103` no botão animado,
-      `borderRadius: 32` repetido. Viram tokens.
-      `src/app/tarefas/index.jsx` · `src/components/DigitarTarefa/index.jsx`
+      `borderRadius: 32` repetido, `height: 120` na tab bar. Viram tokens.
 - [ ] **Resolver a promessa de tema automático**
       `app.json` declara `userInterfaceStyle: "automatic"`, mas o app é escuro fixo.
       Ou entrega o tema claro, ou trava em `"dark"` e para de prometer.
@@ -104,7 +133,7 @@ caçar o mesmo hex em quinze arquivos.
 > 🔴 **É o produto** · ~6 h
 
 O cronômetro é metade do motivo do app existir e é a parte menos robusta do código.
-Quatro problemas independentes, um deles silencioso.
+Nada aqui foi tocado ainda.
 
 - [ ] **Formatar o tempo sem `Date`** — 🔴 bug latente
       O display converte segundos para `new Date(segundo * 1000)` e chama `toLocaleTimeString`.
@@ -115,13 +144,15 @@ Quatro problemas independentes, um deles silencioso.
 - [ ] **Tirar o efeito colateral de dentro do updater** — ⚠️ React 19
       `limpar()` é chamado dentro do callback de `setSegundo`. Updater tem que ser puro —
       o StrictMode do React 19 invoca duas vezes e o `clearInterval` roda em duplicidade.
-      `src/app/pomodoro.jsx`
+      `src/app/(tabs)/pomodoro.jsx:47`
 - [ ] **Contar por timestamp, não por tick**
       `setInterval` de 1 s acumula desvio e congela quando o app vai para segundo plano.
       Guardar o instante-alvo e derivar o restante do relógio resolve os dois de uma vez.
 - [ ] **Avisar quando a sessão termina**
       Hoje o tempo zera e volta ao valor inicial em silêncio. Sem som, sem vibração, sem notificação —
       quem trocou de app não fica sabendo. `expo-haptics` já está instalado e sem uso.
+      ⚠️ O sistema de toast foi removido: o aviso tem que ser háptico, sonoro ou notificação
+      de sistema, não um banner in-app.
 - [ ] **Encadear os modos e contar ciclos**
       Foco não avança sozinho para pausa, e nada conta quantos pomodoros saíram.
       É o ciclo que dá sentido à técnica.
@@ -161,10 +192,11 @@ Depende das fases anteriores: não vale escrever teste para código que vai muda
       Começar pelo que tem lógica pura e regressão cara: as funções do contexto de tarefas
       e a formatação de tempo. `jest-expo` + `@testing-library/react-native`.
 - [ ] **Acessibilidade** — 🔴 zero hoje
-      Nenhum `accessibilityLabel`, `accessibilityRole` ou `accessible` em todo o `src/`.
+      Zero ocorrências de `accessibilityLabel`, `accessibilityRole` ou `accessible` em todo o `src/`.
       Os botões de concluir e excluir são `Pressable` com ícone SVG e nenhum texto —
       leitor de tela não anuncia nada.
-- [ ] **CI no GitHub Actions** — lint e teste a cada push. Hoje nada roda sozinho.
+- [ ] **CI no GitHub Actions** — lint e build a cada push. Hoje nada roda sozinho,
+      e o lint só está zerado porque foi rodado à mão.
 - [ ] **Gerar os ícones de verdade**
       `icon`, `favicon` e `splash` apontam todos para o mesmo `adaptive-icon.png` de 225×225.
       A Expo pede 1024×1024 — hoje só não quebra porque nada foi publicado.
@@ -182,14 +214,15 @@ onde realmente cabe, respeitando dependências.
 
 ---
 
-## 🧹 As dez dependências mortas
+## 🧹 As onze dependências mortas
 
-Nenhuma aparece em nenhum `import` dentro de `src/`. Verificado por varredura no diretório inteiro.
+Nenhuma aparece em nenhum `import` dentro de `src/`. Verificado por varredura no diretório inteiro em 2026-09-02.
 
 | Pacote | Situação |
 |---|---|
 | `react-native-keyboard-aware-scroll-view` | Abandonado, sem suporte à New Architecture. **Remover primeiro.** |
 | `react-native-vector-icons` | Redundante — o app usa `@expo/vector-icons`. |
+| `react-native-reanimated` | Sem uso. Todas as animações são do `Animated` da RN core. Puxa o `react-native-worklets` junto. |
 | `uuid` | Instalado e nunca importado. Candidato a uso na fase 4. |
 | `react-native-uuid` | Segunda biblioteca para o mesmo fim. Escolher uma. |
 | `expo-blur` | Sem uso. |

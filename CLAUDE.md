@@ -14,10 +14,12 @@ Idioma do código: **português** (variáveis, funções, componentes, comentár
 ```
 src/
 ├── app/                    # rotas expo-router (file-based routing)
-│   ├── _layout.jsx         # raiz: providers + Bottom Tabs
+│   ├── _layout.jsx         # raiz: providers + Stack
 │   ├── index.jsx           # tela inicial (splash/onboarding)
-│   ├── pomodoro.jsx        # aba "Foco" — timer
-│   ├── tarefas/index.jsx   # aba "Tarefas" — lista
+│   ├── (tabs)/             # grupo: as abas, uma tela do Stack
+│   │   ├── _layout.jsx     # Bottom Tabs
+│   │   ├── pomodoro.jsx    # aba "Foco" — timer
+│   │   └── tarefas/index.jsx
 │   ├── add_tarefa/index.jsx
 │   └── edit_tarefa/[id].jsx
 ├── components/             # cada componente = pasta com index.jsx
@@ -31,11 +33,19 @@ expo-router detecta `src/app/` automaticamente (SDK 50+). Não existe pasta `app
 
 ## Navegação
 
-`Tabs` do expo-router (`expo-router/js-tabs`) em [_layout.jsx](src/app/_layout.jsx).
-Só 2 abas visíveis: **Foco** (`pomodoro`) e **Tarefas** (`tarefas/index`).
-Demais telas ficam ocultas via `href: null` nas `Tabs.Screen`.
-`index` esconde a tab bar (`tabBarStyle: { display: "none" }`).
-[VoltaRoteador](src/components/VoltaRoteador/index.jsx) intercepta botão físico de voltar do Android e força rota `/tarefas`.
+**Stack na raiz, Tabs dentro dele.**
+
+[_layout.jsx](src/app/_layout.jsx) é um `<Stack>`. O grupo `(tabs)` é UMA tela dessa pilha,
+com [seu próprio `<Tabs>`](src/app/(tabs)/_layout.jsx) (`expo-router/js-tabs`).
+`add_tarefa` e `edit_tarefa` empilham por cima e ganham voltar nativo.
+
+Parênteses em `(tabs)` marcam grupo de rotas: não entram na URL.
+As rotas continuam `/pomodoro` e `/tarefas` — não renomear para `/(tabs)/...`.
+
+[VoltaRoteador](src/components/VoltaRoteador/index.jsx) intercepta o voltar e força uma rota fixa.
+**Montar por tela, nunca no `_layout` raiz** — ele cancela o `beforeRemove` do navegador,
+então na raiz bloquearia o voltar de todas as telas. Usa `replace`, não `push`:
+`push` faria a pilha crescer a cada voltar.
 
 ## Estado
 
