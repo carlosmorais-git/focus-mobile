@@ -38,7 +38,7 @@ Levantado item a item contra o código; não é lista de intenção.
 | `SafeAreaView` do core | migrado para `react-native-safe-area-context` + `SafeAreaProvider` na raiz | `c1891c9` |
 | Rodar em aparelho | Android por cabo USB, `npm run android:usb` | `c8751b8` |
 | Stack por cima das Tabs | grupo `(tabs)` com layout próprio; add/edit empilham com voltar nativo | `ec285a5` |
-| `VoltaRoteador` apagado | interceptar `beforeRemove` e navegar dentro do listener causa laço infinito com Stack | `a seguir` |
+| `VoltaRoteador` apagado | interceptar `beforeRemove` e navegar dentro do listener causa laço infinito com Stack | `f627321` |
 
 ---
 
