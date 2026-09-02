@@ -14,7 +14,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSave } from "../../components/Icons";
 import useScrollToCursor from "../../hooks/useScrollToCursor";
 import FocoBotao from "../../components/FocoBotao";
-import Roteador from "../../components/VoltaRoteador";
 import useValorAnimado from "../../hooks/useValorAnimado";
 
 const DigitarTarefa = ({
@@ -155,8 +154,6 @@ const DigitarTarefa = ({
           </View>
         </Animated.View>
       </KeyboardAvoidingView>
-
-      <Roteador rota="/tarefas" />
     </SafeAreaView>
   );
 };

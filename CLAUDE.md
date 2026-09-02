@@ -42,10 +42,12 @@ com [seu próprio `<Tabs>`](src/app/(tabs)/_layout.jsx) (`expo-router/js-tabs`).
 Parênteses em `(tabs)` marcam grupo de rotas: não entram na URL.
 As rotas continuam `/pomodoro` e `/tarefas` — não renomear para `/(tabs)/...`.
 
-[VoltaRoteador](src/components/VoltaRoteador/index.jsx) intercepta o voltar e força uma rota fixa.
-**Montar por tela, nunca no `_layout` raiz** — ele cancela o `beforeRemove` do navegador,
-então na raiz bloquearia o voltar de todas as telas. Usa `replace`, não `push`:
-`push` faria a pilha crescer a cada voltar.
+O voltar é o nativo do Stack — não interceptar. Existia um `VoltaRoteador` que cancelava
+o `beforeRemove` e forçava `/tarefas`; foi apagado. Ele fazia sentido quando tudo era Tabs
+e nada empilhava, mas com Stack qualquer interceptação de `beforeRemove` que navegue
+dentro do próprio listener entra em laço: navegar remove a tela, remover dispara
+`beforeRemove` de novo. `add_tarefa` e `edit_tarefa` só são alcançadas a partir de
+`/tarefas`, então desempilhar já volta para o lugar certo.
 
 ## Estado
 

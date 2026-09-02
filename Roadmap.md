@@ -38,6 +38,7 @@ Levantado item a item contra o código; não é lista de intenção.
 | `SafeAreaView` do core | migrado para `react-native-safe-area-context` + `SafeAreaProvider` na raiz | `c1891c9` |
 | Rodar em aparelho | Android por cabo USB, `npm run android:usb` | `c8751b8` |
 | Stack por cima das Tabs | grupo `(tabs)` com layout próprio; add/edit empilham com voltar nativo | `ec285a5` |
+| `VoltaRoteador` apagado | interceptar `beforeRemove` e navegar dentro do listener causa laço infinito com Stack | `a seguir` |
 
 ---
 
@@ -90,12 +91,6 @@ Levantado item a item contra o código; não é lista de intenção.
 A troca de Tabs para Stack fechou a estrutura, mas deixou pontas soltas em quem
 navegava assumindo que tudo era irmão.
 
-- [ ] **Revisar o `VoltaRoteador`** — ⚠️ briga com o Stack
-      Ainda cancela `beforeRemove` e força uma rota fixa. Foi tirado do layout raiz e
-      trocado de `push` para `replace`, mas continua montado dentro do `DigitarTarefa`,
-      valendo para add e edit. Com Stack, `router.back()` já faz a coisa certa —
-      provavelmente o componente inteiro deixou de ser necessário.
-      `src/components/VoltaRoteador/index.jsx` · `src/components/DigitarTarefa/index.jsx:159`
 - [ ] **Trocar `router.navigate("../tarefas")` por `router.back()`**
       Sobrou de quando não havia pilha. Hoje empurra rota em vez de desempilhar.
       `src/app/add_tarefa/index.jsx:50` · `src/app/edit_tarefa/[id].jsx:64`
