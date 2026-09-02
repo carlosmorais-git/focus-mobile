@@ -17,7 +17,8 @@ export default function Index() {
         </Text>
         <Image
           source={Img_TelaInicial}
-          style={[styles.imagem, { resizeMode: "contain" }]}
+          style={styles.imagem}
+          resizeMode="contain"
         />
 
         {/* Botao de iniciar o aplicativo */}

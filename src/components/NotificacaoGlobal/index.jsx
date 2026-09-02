@@ -93,7 +93,7 @@ export default function NotificacaoGlobal() {
 
         <View style={styles.textoArea}>
           <Text style={styles.titulo}>{titulo}</Text>
-          {mensagem && (
+          {!!mensagem && (
             <Text style={styles.mensagem} numberOfLines={3}>
               {mensagem}
             </Text>
@@ -126,10 +126,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
 
     elevation: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 6 },
+    boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.3)",
     zIndex: 999,
     overflow: "hidden",
   },

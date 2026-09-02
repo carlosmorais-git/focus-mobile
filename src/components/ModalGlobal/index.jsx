@@ -93,7 +93,7 @@ export default function ModalGlobal() {
 
             <Text style={styles.titulo}>{modal.titulo}</Text>
 
-            {modal.tipo === "carregando" && modal.mensagem && (
+            {modal.tipo === "carregando" && !!modal.mensagem && (
               <Text style={styles.mensagem}>{modal.mensagem}</Text>
             )}
 
@@ -140,10 +140,7 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     alignItems: "center",
     elevation: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.4,
-    shadowRadius: 15,
-    shadowOffset: { width: 0, height: 8 },
+    boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.4)",
     borderWidth: 2,
     borderColor: "#B872FF", // Borda roxa para destaque
   },

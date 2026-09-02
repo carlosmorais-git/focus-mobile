@@ -61,7 +61,8 @@ export default function Pomodoro() {
       {/* Imagem da tela Foco */}
       <Image
         source={modoAtivo.image}
-        style={[styles.imagem, { resizeMode: "contain" }]}
+        style={styles.imagem}
+        resizeMode="contain"
       />
       <View style={styles.actions}>
         <View style={styles.modoContainer}>
