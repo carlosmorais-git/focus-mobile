@@ -6,7 +6,7 @@
 
 Timer Pomodoro e gerenciador de tarefas em React Native.
 
-`React Native 0.86` · `Expo SDK 57` · `expo-router` · `Context API` · `AsyncStorage`
+`TypeScript` · `React Native 0.86` · `Expo SDK 57` · `expo-router` · `Context API` · `AsyncStorage`
 
 </div>
 
@@ -30,7 +30,7 @@ Timer Pomodoro e gerenciador de tarefas em React Native.
 - **Tarefas** com criar, editar, excluir e concluir
 - **Persistência local** em AsyncStorage — funciona offline, nada sai do aparelho
 - **Modal de confirmação** baseado em Promise: `const ok = await confirmar({ titulo, mensagem })`
-- Tema escuro, tokens centralizados em [`src/theme/`](src/theme/index.js)
+- Tema escuro, tokens centralizados em [`src/theme/`](src/theme/index.ts)
 
 ---
 
@@ -64,19 +64,20 @@ O túnel cai quando o cabo desconecta — rode `npm run adb:reverse` de novo.
 ```
 src/
 ├── app/                    # rotas (expo-router, file-based)
-│   ├── _layout.jsx         # Stack raiz + providers
-│   ├── index.jsx           # tela inicial
+│   ├── _layout.tsx         # Stack raiz + providers
+│   ├── index.tsx           # tela inicial
 │   ├── (tabs)/             # as abas são UMA tela do Stack
-│   │   ├── _layout.jsx     # Bottom Tabs
-│   │   ├── pomodoro.jsx    # aba Foco
+│   │   ├── _layout.tsx     # Bottom Tabs
+│   │   ├── pomodoro.tsx    # aba Foco
 │   │   └── tarefas/        # aba Tarefas
 │   ├── add_tarefa/         # empilha por cima das abas
-│   └── edit_tarefa/[id].jsx
+│   └── edit_tarefa/[id].tsx
 │
-├── components/             # um componente por pasta, com index.jsx
+├── components/             # um componente por pasta, com index.tsx
 ├── context/                # Context API: provedor + hook por domínio
 ├── hooks/
 ├── theme/                  # cores, espaçamento, raio, fonte
+├── types/                  # declaração dos módulos de asset
 └── assets/
 ```
 
@@ -95,6 +96,7 @@ npm run android        # abre no Android
 npm run ios            # abre no iOS
 npm run web            # abre no navegador
 npm run lint           # expo lint
+npm run typecheck      # tsc --noEmit
 
 npm run android:usb    # Android por cabo (túnel adb + Metro em IPv4)
 npm run adb:reverse    # só o túnel
@@ -113,7 +115,8 @@ juntos e criam a tag. Exigem a árvore do git limpa.
 
 ## Estado
 
-`expo lint` fecha em zero, `npx expo-doctor` em 21/21. Sem testes automatizados.
+`expo lint` e `tsc --noEmit` fecham em zero, `npx expo-doctor` em 21/21.
+TypeScript com `strict: true`, sem `any`. Sem testes automatizados.
 
 O plano do que falta — e o que é defeito conhecido e adiado de propósito — está no
 [Roadmap.md](Roadmap.md), com arquivo e linha em cada item.

@@ -11,7 +11,7 @@ import { Animated } from "react-native";
  * A RN expõe `useAnimatedValue` com o mesmo propósito, mas o react-native-web
  * não reexporta esse hook — por isso a versão local.
  */
-export default function useValorAnimado(valorInicial = 0) {
+export default function useValorAnimado(valorInicial = 0): Animated.Value {
   const [valor] = useState(() => new Animated.Value(valorInicial));
   return valor;
 }

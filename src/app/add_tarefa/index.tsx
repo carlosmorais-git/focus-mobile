@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Animated } from "react-native";
+import { Animated, type TextInput } from "react-native";
 import useContextoTarefa from "../../context/tarefas/ProvedorTarefas";
 import { router, useFocusEffect } from "expo-router";
 import DigitarTarefa from "../../components/DigitarTarefa";
@@ -13,7 +13,7 @@ const AddTarefa = () => {
   const [descricao, setDescricao] = useState("");
 
   // Referência do input para focar automaticamente
-  const referencia = useRef(null);
+  const referencia = useRef<TextInput>(null);
 
   // Inicializa o valor da animação (entrada fluida do input)
   const aparicaoFluida = useValorAnimado(300);

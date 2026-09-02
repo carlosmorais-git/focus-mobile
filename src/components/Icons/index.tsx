@@ -37,7 +37,7 @@ export const IconPlus = () => {
   );
 };
 
-export const IconSave = ({ disabled }) => {
+export const IconSave = ({ disabled }: { disabled?: boolean }) => {
   return (
     <Svg width="12" height="12" viewBox="0 0 12 12" fill="none">
       <Path
@@ -48,7 +48,7 @@ export const IconSave = ({ disabled }) => {
   );
 };
 
-export const IconCheck = ({ checked }) => {
+export const IconCheck = ({ checked }: { checked?: boolean }) => {
   return (
     <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
       <Circle cx="12" cy="12" r="12" fill={checked ? cores.check : cores.checkVazio} />

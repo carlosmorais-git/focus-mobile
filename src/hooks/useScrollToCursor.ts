@@ -1,16 +1,31 @@
 import { useRef, useState } from "react";
+import type {
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+} from "react-native";
 
+/**
+ * Mantém o cursor visível enquanto o texto cresce dentro de um ScrollView.
+ *
+ * Calcula em que linha o cursor está, converte para posição vertical e rola
+ * só quando essa posição cai fora da faixa visível.
+ */
 export default function useScrollToCursor(alturaLinha = 24) {
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<ScrollView>(null);
   const [currentScrollY, setCurrentScrollY] = useState(0);
-  const [, setLinhaAtual] = useState(null);
+  const [, setLinhaAtual] = useState<number | null>(null);
   const [alturaVisivel, setAlturaVisivel] = useState(0);
 
-  const calcularLinha = (texto, cursorPosition) => {
+  const calcularLinha = (texto: string, cursorPosition: number): number => {
     return texto.substring(0, cursorPosition).split("\n").length;
   };
 
-  const scrollToCursor = (cursorPosition, texto) => {
+  const scrollToCursor = (
+    cursorPosition: number | null | undefined,
+    texto: string
+  ) => {
     if (cursorPosition == null) return;
 
     const novaLinha = calcularLinha(texto, cursorPosition);
@@ -23,21 +38,16 @@ export default function useScrollToCursor(alturaLinha = 24) {
 
     if (!estaVisivel) {
       scrollRef.current?.scrollTo({ y: posicaoY, animated: true });
-      // console.log(`🟢 Scroll para linha ${novaLinha}, posY ${posicaoY}`);
       setLinhaAtual(novaLinha);
-    } else {
-      // console.log(`🔵 Linha ${novaLinha} já visível, não faz scroll`);
     }
   };
 
-  const onScroll = (e) => {
-    const y = e.nativeEvent.contentOffset.y;
-    setCurrentScrollY(y);
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setCurrentScrollY(e.nativeEvent.contentOffset.y);
   };
 
-  const onLayout = (e) => {
-    const altura = e.nativeEvent.layout.height;
-    setAlturaVisivel(altura);
+  const onLayout = (e: LayoutChangeEvent) => {
+    setAlturaVisivel(e.nativeEvent.layout.height);
   };
 
   const resetarLinha = () => {

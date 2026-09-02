@@ -5,13 +5,13 @@ import { IconPlay, IconPause } from "../../components/Icons"; // Importando os �
 import Img_foco from "../../assets/images/Imagem foco.png";
 import Img_curto from "../../assets/images/Imagem descanso curto.png";
 import Img_longo from "../../assets/images/Imagem descanso longo.png";
-import AbasModo from "../../components/Actions";
+import AbasModo, { type Modo } from "../../components/Actions";
 import FocoBotao from "../../components/FocoBotao";
 import Tempo from "../../components/Tempo";
 import Footer from "../../components/Footer";
 import { cores, espaco, fonte, raio } from "@/theme";
 
-const valueDic = [
+const valueDic: Modo[] = [
   { id: 1, name: "Foco", tempo: 25 * 60, image: Img_foco },
   { id: 2, name: "Pausa curta", tempo: 5 * 60, image: Img_curto },
   { id: 3, name: "Pausa longa", tempo: 15 * 60, image: Img_longo },
@@ -24,7 +24,7 @@ export default function Pomodoro() {
   const [segundo, setSegundo] = useState(valueDic[0].tempo); // Estado para armazenar o segundo atual
   const [modoRodando, setModoRodando] = useState(false); // Estado para armazenar se o modo está rodando
   // Referência para o temporizador
-  const tempoRef = useRef(null); // Referência para o temporizador
+  const tempoRef = useRef<ReturnType<typeof setInterval> | null>(null); // Referência para o temporizador
   // Função para mudar o modo ativo
   const limpar = () => {
     if (tempoRef.current !== null) {
@@ -33,7 +33,7 @@ export default function Pomodoro() {
       setModoRodando(false); // Reseta o estado de rodando ao mudar de modo
     }
   };
-  const mudarModo = (modo) => {
+  const mudarModo = (modo: Modo) => {
     setModoAtivo(modo);
     setSegundo(modo.tempo); // ← reseta o tempo conforme o novo modo
     limpar(); // Limpa o temporizador atual antes de mudar o modo
@@ -75,7 +75,7 @@ export default function Pomodoro() {
             valueDic={valueDic}
           />
         </View>
-        <Tempo modoAtivo={modoAtivo} segundo={segundo} />
+        <Tempo segundo={segundo} />
         <FocoBotao
           titulo={modoRodando ? "Pausar" : "Começar"}
           img={modoRodando ? <IconPause /> : <IconPlay />}

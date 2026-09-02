@@ -11,6 +11,7 @@
     "adb:reverse": "adb reverse tcp:8081 tcp:8081",
     "adb:devices": "adb devices -l",
     "lint": "expo lint",
+    "typecheck": "tsc --noEmit",
     "version": "node scripts/sync-app-version.js && git add app.json",
     "release:patch": "npm version patch",
     "release:minor": "npm version minor",

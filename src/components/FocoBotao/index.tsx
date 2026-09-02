@@ -1,7 +1,19 @@
 import { Pressable, StyleSheet, Text } from "react-native";
+import type { ReactNode } from "react";
 import { cores, espaco, fonte, raio } from "@/theme";
+
+type Props = {
+  titulo: string;
+  onPress?: () => void;
+  /** Ícone renderizado à esquerda do texto. */
+  img?: ReactNode;
+  /** Versão vazada: fundo transparente e borda roxa. */
+  outline?: boolean;
+  disabled?: boolean;
+};
+
 // Componente FocoBotao que representa um botão de play ou ação
-const FocoBotao = ({ titulo, onPress, img, outline, disabled }) => {
+const FocoBotao = ({ titulo, onPress, img, outline, disabled }: Props) => {
   return (
     <Pressable
       style={[

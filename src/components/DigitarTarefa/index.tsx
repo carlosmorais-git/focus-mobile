@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -10,12 +10,25 @@ import {
   Keyboard,
   ScrollView,
 } from "react-native";
+import type { RefObject } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSave } from "../../components/Icons";
 import useScrollToCursor from "../../hooks/useScrollToCursor";
 import { cores, espaco, fonte, raio, sombra } from "@/theme";
 import FocoBotao from "../../components/FocoBotao";
 import useValorAnimado from "../../hooks/useValorAnimado";
+
+type Props = {
+  onPress: () => void;
+  /** Valor animado da entrada da tela, controlado pela rota que monta o form. */
+  aparicaoFluida: Animated.Value;
+  /** Ref do TextInput, para focar automaticamente ao abrir. */
+  referencia: RefObject<TextInput | null>;
+  descricao: string;
+  setDescricao: (descricao: string) => void;
+  texto_botao: string;
+  titulo: string;
+};
 
 const DigitarTarefa = ({
   onPress,
@@ -25,7 +38,7 @@ const DigitarTarefa = ({
   setDescricao,
   texto_botao,
   titulo,
-}) => {
+}: Props) => {
   const { scrollRef, scrollToCursor, onScroll, onLayout, resetarLinha } =
     useScrollToCursor(18);
 
@@ -108,12 +121,6 @@ const DigitarTarefa = ({
                   setInputHeight(Math.max(altura, ALTURA_MINIMA));
                 } else {
                   setInputHeight(ALTURA_MAXIMA);
-                }
-              }}
-              onFocus={({ nativeEvent }) => {
-                const pos = nativeEvent?.selection?.start;
-                if (pos !== undefined) {
-                  scrollToCursor(pos, descricao);
                 }
               }}
               onSelectionChange={({ nativeEvent }) => {

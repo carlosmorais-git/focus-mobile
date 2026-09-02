@@ -5,8 +5,9 @@ Guia para agentes de IA trabalhando neste repositório.
 ## O que é
 
 App mobile de produtividade: **timer Pomodoro** + **gerenciador de tarefas**.
-React Native 0.86 + Expo SDK 57 + expo-router 57 + React 19.2. JavaScript (`.jsx`), não TypeScript.
-Nova arquitetura ligada (`newArchEnabled: true`).
+React Native 0.86 + Expo SDK 57 + expo-router 57 + React 19.2.
+**TypeScript** (`.tsx` / `.ts`) em todo o `src/`, com `strict: true`.
+Nova arquitetura ligada — é o padrão do SDK 57, não há chave no `app.json`.
 Idioma do código: **português** (variáveis, funções, componentes, comentários).
 
 ## Estrutura (tudo em `src/`)
@@ -14,17 +15,19 @@ Idioma do código: **português** (variáveis, funções, componentes, comentár
 ```
 src/
 ├── app/                    # rotas expo-router (file-based routing)
-│   ├── _layout.jsx         # raiz: providers + Stack
-│   ├── index.jsx           # tela inicial (splash/onboarding)
+│   ├── _layout.tsx         # raiz: providers + Stack
+│   ├── index.tsx           # tela inicial (splash/onboarding)
 │   ├── (tabs)/             # grupo: as abas, uma tela do Stack
-│   │   ├── _layout.jsx     # Bottom Tabs
-│   │   ├── pomodoro.jsx    # aba "Foco" — timer
-│   │   └── tarefas/index.jsx
-│   ├── add_tarefa/index.jsx
-│   └── edit_tarefa/[id].jsx
-├── components/             # cada componente = pasta com index.jsx
+│   │   ├── _layout.tsx     # Bottom Tabs
+│   │   ├── pomodoro.tsx    # aba "Foco" — timer
+│   │   └── tarefas/index.tsx
+│   ├── add_tarefa/index.tsx
+│   └── edit_tarefa/[id].tsx
+├── components/             # cada componente = pasta com index.tsx
 ├── context/                # Context API: um par Provedor + hook por domínio
 ├── hooks/
+├── theme/                  # tokens de design
+├── types/                  # assets.d.ts — módulos .png/.jpg para o tsc
 └── assets/                 # imagens, fontes, prints em Designer/
 ```
 
@@ -35,8 +38,8 @@ expo-router detecta `src/app/` automaticamente (SDK 50+). Não existe pasta `app
 
 **Stack na raiz, Tabs dentro dele.**
 
-[_layout.jsx](src/app/_layout.jsx) é um `<Stack>`. O grupo `(tabs)` é UMA tela dessa pilha,
-com [seu próprio `<Tabs>`](src/app/(tabs)/_layout.jsx) (`expo-router/js-tabs`).
+[_layout.tsx](src/app/_layout.tsx) é um `<Stack>`. O grupo `(tabs)` é UMA tela dessa pilha,
+com [seu próprio `<Tabs>`](src/app/(tabs)/_layout.tsx) (`expo-router/js-tabs`).
 `add_tarefa` e `edit_tarefa` empilham por cima e ganham voltar nativo.
 
 Parênteses em `(tabs)` marcam grupo de rotas: não entram na URL.
@@ -55,8 +58,8 @@ Dois Contexts, aninhados nesta ordem em `_layout.jsx` (dados → interface):
 
 | Contexto | Arquivo | Hook | Responsabilidade |
 |---|---|---|---|
-| Tarefas | [ProvedorTarefas.jsx](src/context/tarefas/ProvedorTarefas.jsx) | `useContextoTarefa` | CRUD + persistência |
-| Modal | [ProvedorModal.jsx](src/context/modal/ProvedorModal.jsx) | `useModal` | confirmação (Promise) + loading |
+| Tarefas | [ProvedorTarefas.tsx](src/context/tarefas/ProvedorTarefas.tsx) | `useContextoTarefa` | CRUD + persistência |
+| Modal | [ProvedorModal.tsx](src/context/modal/ProvedorModal.tsx) | `useModal` | confirmação (Promise) + loading |
 
 **Um arquivo por domínio.** O provedor é `export` nomeado, o hook é o `export default`
 do mesmo arquivo — não existe arquivo separado só para o hook.
@@ -74,7 +77,8 @@ um arquivo.
 
 **Persistência:** AsyncStorage, chave `foco-tarefas`. Salva automaticamente em `useEffect` sobre `tarefas`, protegido por flag `isLoaded` (evita gravar array vazio antes do load inicial).
 
-**Tarefa:** `{ id: number, descricao: string, completed: boolean }`. `id` = `Date.now() + random(1000)`.
+**Tarefa:** o tipo `Tarefa` é exportado por [ProvedorTarefas.tsx](src/context/tarefas/ProvedorTarefas.tsx).
+`id` = `Date.now() + random(1000)`, e também é chave de rota em `edit_tarefa/[id]`.
 
 **Modal de confirmação** retorna Promise: `const ok = await confirmar({ titulo, mensagem })`.
 
@@ -91,7 +95,7 @@ Foi removido de propósito; não reintroduzir sem pedido explícito.
 
 ## Estilo
 
-`StyleSheet.create` local em cada arquivo, mas os **valores vêm de [src/theme/](src/theme/index.js)**.
+`StyleSheet.create` local em cada arquivo, mas os **valores vêm de [src/theme/](src/theme/index.ts)**.
 Nenhuma cor, espaçamento, raio ou tamanho de fonte literal fora desse arquivo — se precisar de um
 valor novo, adicione um token; não escreva o hex no `StyleSheet`.
 
@@ -125,7 +129,7 @@ disparam warning no react-native-web. `elevation` continua para o Android.
 
 ## Valores animados
 
-Use [useValorAnimado](src/hooks/useValorAnimado.js), não `useRef(new Animated.Value(x)).current`
+Use [useValorAnimado](src/hooks/useValorAnimado.ts), não `useRef(new Animated.Value(x)).current`
 — ler um ref durante o render é erro da regra `react-hooks/refs`.
 A RN expõe `useAnimatedValue` com o mesmo propósito, mas o `react-native-web` não reexporta
 esse hook, então a versão local existe para o app funcionar no web.
@@ -134,7 +138,9 @@ O valor é estável entre renders, então pode (e deve) entrar nos arrays de dep
 
 ## Imports
 
-Relativos (`../../components/...`) na maior parte. Alias `@/*` → `src/*` configurado em `tsconfig.json` e usado em um ponto ([index.jsx](src/app/index.jsx)). Preferir `@/` em código novo.
+Relativos (`../../components/...`) na maior parte. Alias `@/*` → `src/*` configurado em `tsconfig.json`, usado nos imports de `@/theme`. Preferir `@/` em código novo.
+
+Sem `baseUrl`: o TypeScript 6 o deprecou, e `paths` já resolve relativo ao próprio `tsconfig.json`.
 
 ## Comandos
 
@@ -144,6 +150,7 @@ npm run android
 npm run ios
 npm run web
 npm run lint       # expo lint — deve ficar em zero, sem erro nem warning
+npm run typecheck  # tsc --noEmit — idem
 npx expo start -c  # limpar cache do Metro (usar após mover arquivos)
 
 npm run android:usb     # espera device, cria túnel adb, abre com --localhost
@@ -177,7 +184,10 @@ e espelha `ios.buildNumber`.
 
 ## Pendências conhecidas
 
-- `icon`, `favicon` e `splash` do `app.json` apontam todos para `adaptive-icon.png` (225x225). Expo recomenda **1024x1024** para o ícone — gerar assets dedicados antes de publicar.
+- `icon`, `favicon` e `splash` do `app.json` apontam todos para o mesmo `logo.png`.
+  O tamanho está certo (1024×1024), mas splash e favicon pedem recortes diferentes.
+- `scripts/*.js` seguem em JavaScript de propósito: rodam direto pelo `node`, e convertê-los
+  exigiria um runner ou etapa de build para nada.
 - Sem testes automatizados.
 - `expo-haptics` e `react-native-uuid` estão instalados e ainda sem uso: são reserva
   declarada para itens de "Conhecido e adiado" no [Roadmap.md](Roadmap.md).
@@ -187,7 +197,8 @@ e espelha `ios.buildNumber`.
 ## Convenções
 
 - Nomes em português, componentes em PascalCase, pastas de componente com `index.jsx`.
-- Não converter para TypeScript sem pedido explícito.
+- TypeScript com `strict: true`. Não usar `any`; preferir `unknown` na fronteira de dado cru
+  (o que sai do AsyncStorage, o erro de um `catch`) e estreitar depois.
 - Não mover arquivos para fora de `src/` — estrutura `src/` é preferência do dono do repo.
 - Prettier não é ferramenta do projeto (não há config nem dependência) — não rodar, ele
   reformata com trailing commas que não batem com o estilo existente.

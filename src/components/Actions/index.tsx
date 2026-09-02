@@ -1,7 +1,23 @@
-import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
+import type { ImageSourcePropType } from "react-native";
 import { cores, espaco, raio } from "@/theme";
-const AbasModo = ({ modoAtivo, mudarModo, valueDic }) => {
+
+/** Um modo do Pomodoro: foco, pausa curta ou pausa longa. */
+export type Modo = {
+  id: number;
+  name: string;
+  /** Duração do modo, em segundos. */
+  tempo: number;
+  image: ImageSourcePropType;
+};
+
+type Props = {
+  modoAtivo: Modo;
+  mudarModo: (modo: Modo) => void;
+  valueDic: Modo[];
+};
+
+const AbasModo = ({ modoAtivo, mudarModo, valueDic }: Props) => {
   return (
     <>
       {/* Vou mapear os modos */}

@@ -1,21 +1,46 @@
-import { createContext, useContext, useEffect, useState } from "react";
-// Atencao so sabe usar string
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+/** Uma tarefa da lista. `id` também é chave de rota em `edit_tarefa/[id]`. */
+export type Tarefa = {
+  id: number;
+  descricao: string;
+  completed: boolean;
+};
+
+type ContextoTarefa = {
+  tarefas: Tarefa[];
+  /** Última falha de gravação no AsyncStorage, ou `null` se tudo persistiu. */
+  erroPersistencia: unknown;
+  addTarefa: (descricao: string) => void;
+  completarTarefa: (id: number) => void;
+  deletarTarefa: (id: number) => void;
+  editarTarefa: (id: number, descricao: string) => void;
+};
+
 // Criação do contexto das tarefas
-export const TaskContext = createContext();
+export const TaskContext = createContext<ContextoTarefa | null>(null);
 const TAREFAS_STOREGE_KEY = "foco-tarefas";
+
 // Componente provedor que disponibiliza o contexto para os filhos
-export function ProvedorTarefas({ children }) {
-  const [tarefas, setTarefas] = useState([]);
+export function ProvedorTarefas({ children }: { children: ReactNode }) {
+  const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   // Guarda a última falha de gravação. null = tudo persistido.
-  const [erroPersistencia, setErroPersistencia] = useState(null);
+  const [erroPersistencia, setErroPersistencia] = useState<unknown>(null);
 
   // Carrega os dados salvos no armazenamento local (AsyncStorage) assim que o componente for montado
   useEffect(() => {
     const getData = async () => {
       const jsonValue = await AsyncStorage.getItem(TAREFAS_STOREGE_KEY); // Recupera os dados salvos
-      const loadData = jsonValue != null ? JSON.parse(jsonValue) : []; // Converte de JSON para array ou inicia vazio
+      // O que sai do AsyncStorage é string: o cast é a fronteira entre dado cru e tipado
+      const loadData: Tarefa[] = jsonValue != null ? JSON.parse(jsonValue) : [];
       setTarefas(loadData); // Atualiza o estado com os dados recuperados
       setIsLoaded(true); // Marca como carregado para permitir persistência futura
     };
@@ -23,7 +48,7 @@ export function ProvedorTarefas({ children }) {
   }, []); // Executa apenas uma vez ao montar o componente
 
   // Função para salvar os dados no armazenamento local
-  const storeData = async (value) => {
+  const storeData = async (value: Tarefa[]) => {
     const jsonValue = JSON.stringify(value); // Converte o array de tarefas para JSON
     await AsyncStorage.setItem(TAREFAS_STOREGE_KEY, jsonValue); // Salva no AsyncStorage
   };
@@ -38,7 +63,7 @@ export function ProvedorTarefas({ children }) {
       .then(() => {
         if (ativo) setErroPersistencia(null); // Gravou: limpa a falha anterior
       })
-      .catch((erro) => {
+      .catch((erro: unknown) => {
         // Sem isso a tarefa some no próximo boot e ninguém fica sabendo
         console.error("Falha ao salvar as tarefas no AsyncStorage", erro);
         if (ativo) setErroPersistencia(erro);
@@ -50,7 +75,7 @@ export function ProvedorTarefas({ children }) {
   }, [tarefas, isLoaded]); // Dispara sempre que o estado `tarefas` mudar
 
   // Adiciona uma nova tarefa com descrição e ID único
-  const addTarefa = (descricao) => {
+  const addTarefa = (descricao: string) => {
     setTarefas((prev) => [
       ...prev,
       {
@@ -62,7 +87,7 @@ export function ProvedorTarefas({ children }) {
   };
 
   // Alterna o status de conclusão da tarefa com base no ID
-  const completarTarefa = (id) => {
+  const completarTarefa = (id: number) => {
     setTarefas((prev) =>
       prev.map(
         (tarefa) =>
@@ -74,12 +99,12 @@ export function ProvedorTarefas({ children }) {
   };
 
   // Remove uma tarefa da lista com base no ID
-  const deletarTarefa = (id) => {
+  const deletarTarefa = (id: number) => {
     setTarefas((prev) => prev.filter((tarefa) => tarefa.id !== id));
   };
 
   // Editar uma tarefa
-  const editarTarefa = (id, descricao) => {
+  const editarTarefa = (id: number, descricao: string) => {
     setTarefas((prev) =>
       prev.map(
         (tarefa) =>
@@ -109,7 +134,7 @@ export function ProvedorTarefas({ children }) {
 }
 
 /** Acessa o contexto de tarefas. Lança se usado fora do ProvedorTarefas. */
-export default function useContextoTarefa() {
+export default function useContextoTarefa(): ContextoTarefa {
   const contexto = useContext(TaskContext);
 
   if (!contexto) {

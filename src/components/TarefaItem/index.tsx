@@ -1,9 +1,19 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Text, View, Pressable, StyleSheet, Animated } from "react-native";
 import { IconCheck, IconTrash } from "../Icons";
 import useModal from "../../context/modal/ProvedorModal";
 import useValorAnimado from "../../hooks/useValorAnimado";
 import { cores, espaco, fonte, raio, sombra } from "@/theme";
+
+type Props = {
+  /** Tarefa concluída: muda a cor do card e risca o texto. */
+  completed: boolean;
+  texto: string;
+  onPressEdit: () => void;
+  /** Só é chamado depois do usuário confirmar no modal. */
+  onPressDelete: () => void;
+  onTarefaCompleta: () => void;
+};
 
 const TarefaItem = ({
   completed,
@@ -11,7 +21,7 @@ const TarefaItem = ({
   onPressEdit,
   onPressDelete,
   onTarefaCompleta,
-}) => {
+}: Props) => {
   const { confirmar, carregando, fechar } = useModal();
 
   // Animações
@@ -52,7 +62,8 @@ const TarefaItem = ({
         }),
       ]).start();
 
-      const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+      const delay = (ms: number) =>
+        new Promise((res) => setTimeout(res, ms));
       await delay(1000); // Tempo reduzido para melhor UX
 
       onPressDelete(); // <- Deleta a tarefa

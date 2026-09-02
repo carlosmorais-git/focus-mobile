@@ -16,7 +16,8 @@ leitura do código.
 | | |
 |---|---|
 | **Upgrade** | SDK 53 → 57 · RN 0.79 → 0.86.3 · React 19.2.3 · expo-router 57 |
-| **Estrutura** | `src/` (app, components, context, hooks, assets) |
+| **Linguagem** | TypeScript com `strict: true`, `tsc --noEmit` em zero |
+| **Estrutura** | `src/` (app, components, context, hooks, theme, types, assets) |
 | **Navegação** | Stack na raiz, abas como primeira tela da pilha |
 | **Lint** | ✅ zero erro, zero warning |
 | **expo-doctor** | ✅ 21/21 |
@@ -52,7 +53,8 @@ Levantado item a item contra o código; não é lista de intenção.
 | **Fase 2** — tokens de design | `src/theme/index.js` com `cores`, `espaco`, `raio`, `fonte`, `sombra`; `src/assets/style.jsx` apagado | não commitado |
 | **Fase 2** — literais eliminados | zero hex, rgba, espaçamento ou fonte solta fora de `src/theme/` | não commitado |
 | **Fase 2** — promessa de tema resolvida | `userInterfaceStyle` de `automatic` para `dark` | não commitado |
-| Ícone em 1024×1024 | `logo.png` no lugar de `adaptive-icon.png`, nas 4 referências do `app.json` | não commitado |
+| Ícone em 1024×1024 | `logo.png` no lugar de `adaptive-icon.png`, nas 4 referências do `app.json` | `df40080` |
+| Migração para TypeScript | 20 arquivos de `src/` em `.ts`/`.tsx`, `strict: true`, script `typecheck` | não commitado |
 
 ---
 
@@ -79,9 +81,6 @@ Ordenado pelo que um leitor do repositório percebe primeiro.
       `icon`, `favicon` e `splash` apontam todos para o mesmo `logo.png`. O tamanho agora
       está certo (1024×1024), mas splash e favicon pedem recortes diferentes do ícone.
       `app.json`
-- [ ] **Screenshots no README**
-      Existe `src/assets/Designer/` com três prints e um `banner.jpg` na raiz, nenhum
-      referenciado no README. Para um repo de portfólio, é o que segura o leitor.
 - [ ] **Acessibilidade** — 🔴 zero hoje
       Zero ocorrências de `accessibilityLabel`, `accessibilityRole` ou `accessible` no `src/`.
       Os botões de concluir e excluir são `Pressable` com ícone SVG e nenhum texto: leitor de

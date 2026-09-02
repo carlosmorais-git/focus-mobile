@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Animated } from "react-native";
+import { Animated, type TextInput } from "react-native";
 
 import useContextoTarefa from "../../context/tarefas/ProvedorTarefas";
 import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
@@ -14,10 +14,10 @@ const EditarTarefa = () => {
   const [descricao, setDescricao] = useState("");
 
   // Referência do input (para focar automaticamente)
-  const referencia = useRef(null);
+  const referencia = useRef<TextInput>(null);
 
   //  Recupera o ID da tarefa passado na navegação
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id: string }>();
 
   // Inicializa o valor da animação (entrada fluida do input)
   const aparicaoFluida = useValorAnimado(700);
