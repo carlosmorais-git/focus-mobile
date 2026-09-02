@@ -1,146 +1,130 @@
-# 🎯 FOCO — App de Produtividade e Pomodoro
+<div align="center">
 
-Aplicativo mobile que combina **técnica Pomodoro** e **gerenciamento de tarefas**, desenvolvido com **React Native + Expo**.
+<img src="src/assets/images/logo.png" width="120" alt="Logo do FOCO">
 
----
+# FOCO
 
-## ✨ Funcionalidades
+Timer Pomodoro e gerenciador de tarefas em React Native.
 
-- 🍅 **Timer Pomodoro** — Sessões de foco com cronômetro
-- 📋 **Lista de Tarefas** — Criar, editar, excluir e marcar como concluída
-- 🎨 **Animações** — Feedback visual ao completar tarefas
-- 📱 **Navegação por Abas** — Interface moderna com bottom tabs
-- 🌙 **Tema Escuro** — Design em tons escuros e roxos
+`TypeScript` · `React Native 0.86` · `Expo SDK 57` · `expo-router` · `Context API` · `AsyncStorage`
+
+</div>
 
 ---
 
-## 🚀 Como Rodar
+## Telas
+
+| Início | Cronômetro |
+|---|---|
+| <img src="src/assets/Designer/1_capa_inicio.jpg" width="260"> | <img src="src/assets/Designer/2_cronometro.jpg" width="260"> |
+
+| Tarefas | Nova tarefa |
+|---|---|
+| <img src="src/assets/Designer/3_lista_tarefas.jpg" width="260"> | <img src="src/assets/Designer/4_criar_tarefas.jpg" width="260"> |
+
+---
+
+## O que faz
+
+- **Pomodoro** com três modos: foco (25 min), descanso curto (5) e longo (15)
+- **Tarefas** com criar, editar, excluir e concluir
+- **Persistência local** em AsyncStorage — funciona offline, nada sai do aparelho
+- **Modal de confirmação** baseado em Promise: `const ok = await confirmar({ titulo, mensagem })`
+- Tema escuro, tokens centralizados em [`src/theme/`](src/theme/index.ts)
+
+---
+
+## Rodando
 
 ```bash
-# Clone o repositório
 git clone https://github.com/carlosmorais-git/AplicativoFocus.git
 cd AplicativoFocus
-
-# Instale as dependências
 npm install
-
-# Inicie o app
 npm start
 ```
 
-💡 **No Windows:** execute `iniciar-projeto-foco.bat`  
-Depois, escaneie o QR Code com o **Expo Go** ou use o emulador (`a` para Android, `i` para iOS).
+Escaneie o QR Code com o **Expo Go**, ou tecle `a` (Android), `i` (iOS), `w` (web).
 
----
+### Por cabo USB
 
-## 🧩 Stack
-
-React Native • Expo • React Native Reanimated
-
----
-
-## 🏗️ Estrutura
-
-```
-app/
-├── _layout.jsx         # Layout principal com navegação
-├── index.jsx           # Tela inicial (Pomodoro)
-├── tarefas/            # Lista de tarefas
-├── add_tarefa/         # Adicionar tarefa
-├── edit_tarefa/        # Editar tarefa
-└── pomodoro.jsx        # Lógica do cronômetro
-
-assets/
-├── Designer/           # Fotos do app funcionando
-
-components/
-├── Actions/            # Botões de ação
-├── FocoBotao/          # Botão principal do timer
-├── ModalGlobal/        # Modal reutilizável
-├── NotificacaoGlobal/  # Sistema de notificações
-└── TarefaItem/         # Item individual da tarefa
-
-context/
-├── modal/              # Controle de modais
-├── notificacao/        # Controle de notificações
-└── tarefas/            # Controle global de tarefas
-```
-
----
-
-## 🔧 Scripts
+Sem Wi-Fi, ou em rede que bloqueia a porta do Metro:
 
 ```bash
-npm start          # Iniciar o app
-npm run android    # Executar no Android
-npm run ios        # Executar no iOS
-npm run web        # Executar na web
-npm run lint       # Verificar código
-npm run reset-project  # Resetar o projeto
+npm run adb:devices   # confere se o aparelho aparece
+npm run android:usb   # espera o device, cria o túnel adb, abre o app
 ```
 
----
-
-## ❓ FAQ
-
-**O app funciona offline?**  
-✅ Sim! Todos os dados são armazenados localmente.
-
-**Posso personalizar o tempo do Pomodoro?**  
-🕒 Ainda não, mas está no roadmap.
-
-**Consome muita bateria?**  
-🔋 Não! As animações são otimizadas com Reanimated.
-
-**Funciona em tablets?**  
-📱 Sim, com layout responsivo.
+O túnel cai quando o cabo desconecta — rode `npm run adb:reverse` de novo.
+`adb devices` mostrando `unauthorized` é o popup de depuração USB pendente no aparelho.
 
 ---
 
-## 📋 Roadmap
+## Estrutura
 
-- [ ] Persistência de dados (AsyncStorage)
-- [ ] Estatísticas de produtividade
-- [ ] Notificações push
-- [ ] Temas personalizáveis
-- [ ] Backup na nuvem
+```
+src/
+├── app/                    # rotas (expo-router, file-based)
+│   ├── _layout.tsx         # Stack raiz + providers
+│   ├── index.tsx           # tela inicial
+│   ├── (tabs)/             # as abas são UMA tela do Stack
+│   │   ├── _layout.tsx     # Bottom Tabs
+│   │   ├── pomodoro.tsx    # aba Foco
+│   │   └── tarefas/        # aba Tarefas
+│   ├── add_tarefa/         # empilha por cima das abas
+│   └── edit_tarefa/[id].tsx
+│
+├── components/             # um componente por pasta, com index.tsx
+├── context/                # Context API: provedor + hook por domínio
+├── hooks/
+├── theme/                  # cores, espaçamento, raio, fonte
+├── types/                  # declaração dos módulos de asset
+└── assets/
+```
 
----
-
-## 🤝 Contribuindo
-
-1. Faça um fork
-2. Crie uma branch (`git checkout -b feature/NovaFeature`)
-3. Commit (`git commit -m "feat: adiciona NovaFeature"`)
-4. Push (`git push origin feature/NovaFeature`)
-5. Abra um Pull Request
-
-🐛 **Reportar bugs:** [Issues](https://github.com/carlosmorais-git/AplicativoFocus/issues)
-
----
-
-## 📈 Versão 2.0 — Refatoração Completa (Out/2025)
-
-**Principais mudanças:**
-
-- Drawer → Bottom Tabs
-- Tema escuro moderno (#021123 / #B872FF)
-- Animações com Reanimated
-- UX aprimorada e feedback visual em todas as ações
+Navegação é um **Stack na raiz** com as abas como primeira tela; `add_tarefa` e
+`edit_tarefa` empilham por cima e ganham voltar nativo. Os parênteses em `(tabs)`
+marcam um grupo de rotas — não entram na URL, então as rotas seguem `/pomodoro` e
+`/tarefas`.
 
 ---
 
-## 🧾 Licença
+## Scripts
 
-Licenciado sob **MIT** — veja [LICENSE](LICENSE).
+```bash
+npm start              # expo start
+npm run android        # abre no Android
+npm run ios            # abre no iOS
+npm run web            # abre no navegador
+npm run lint           # expo lint
+npm run typecheck      # tsc --noEmit
+
+npm run android:usb    # Android por cabo (túnel adb + Metro em IPv4)
+npm run adb:reverse    # só o túnel
+npm run adb:devices    # lista aparelhos
+
+npm run release:patch  # 1.0.0 -> 1.0.1
+npm run release:minor  # 1.0.0 -> 1.1.0
+npm run release:major  # 1.0.0 -> 2.0.0
+```
+
+Os `release:*` fazem o ciclo inteiro: sobem a versão no `package.json`, sincronizam o
+`app.json` (`expo.version`, `android.versionCode` +1, `ios.buildNumber`), commitam os dois
+juntos e criam a tag. Exigem a árvore do git limpa.
 
 ---
 
-## 📞 Contato
+## Estado
 
-**Carlos Morais** — [GitHub](https://github.com/carlosmorais-git)  
-📦 Projeto: [AplicativoFocus](https://github.com/carlosmorais-git/AplicativoFocus)
+`expo lint` e `tsc --noEmit` fecham em zero, `npx expo-doctor` em 21/21.
+TypeScript com `strict: true`, sem `any`. Sem testes automatizados.
+
+O plano do que falta — e o que é defeito conhecido e adiado de propósito — está no
+[Roadmap.md](Roadmap.md), com arquivo e linha em cada item.
 
 ---
 
-_Desenvolvido com ❤️ usando React Native e Expo._
+## Licença
+
+MIT — veja [LICENSE](LICENSE).
+
+**Carlos Morais** · [github.com/carlosmorais-git](https://github.com/carlosmorais-git)

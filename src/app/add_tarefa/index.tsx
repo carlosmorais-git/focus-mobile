@@ -1,0 +1,66 @@
+import React, { useState, useRef } from "react";
+import { Animated, type TextInput } from "react-native";
+import useContextoTarefa from "../../context/tarefas/ProvedorTarefas";
+import { router, useFocusEffect } from "expo-router";
+import DigitarTarefa from "../../components/DigitarTarefa";
+import useValorAnimado from "../../hooks/useValorAnimado";
+
+const AddTarefa = () => {
+  // Contexto para acessar tarefas e adicionar nova tarefa
+  const { addTarefa } = useContextoTarefa();
+
+  // Estado para armazenar a descrição da nova tarefa
+  const [descricao, setDescricao] = useState("");
+
+  // Referência do input para focar automaticamente
+  const referencia = useRef<TextInput>(null);
+
+  // Inicializa o valor da animação (entrada fluida do input)
+  const aparicaoFluida = useValorAnimado(300);
+
+  /**
+   * Animação + foco no input ao abrir a tela
+   * Executa sempre que a tela é focada
+   * o useFocusEffect simula um gatilho de foco na tela
+   * para que a animação e o foco no input aconteçam sempre que a tela é aberta
+   */
+
+  useFocusEffect(
+    React.useCallback(() => {
+      aparicaoFluida.setValue(700);
+
+      Animated.timing(aparicaoFluida, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+
+      const foco = setTimeout(() => {
+        referencia.current?.focus();
+      }, 300);
+
+      return () => clearTimeout(foco);
+    }, [aparicaoFluida])
+  );
+
+  const enviarTarefa = () => {
+    if (!descricao.trim()) return;
+    addTarefa(descricao.trim());
+    setDescricao("");
+    router.back();
+  };
+
+  return (
+    <DigitarTarefa
+      titulo="Em que você está trabalhando?"
+      texto_botao="Salvar Tarefa"
+      aparicaoFluida={aparicaoFluida}
+      referencia={referencia}
+      descricao={descricao}
+      setDescricao={setDescricao}
+      onPress={enviarTarefa}
+    />
+  );
+};
+
+export default AddTarefa;

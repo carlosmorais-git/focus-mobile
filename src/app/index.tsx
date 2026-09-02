@@ -1,0 +1,72 @@
+import React from "react";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import Img_Logo from "../assets/images/Fokus -  logo-02 1.png";
+import Img_TelaInicial from "../assets/images/Imagem tela inicial.png";
+import Footer from "../components/Footer";
+import FocoBotao from "@/components/FocoBotao";
+import { cores, espaco, fonte, raio } from "@/theme";
+export default function Index() {
+  return (
+    // Exibi só na area segura
+    <SafeAreaView style={styles.container}>
+      <Image source={Img_Logo} />
+      <View style={styles.inner}>
+        <Text style={styles.texto}>
+          Otimize sua{"\n"} produtividade,{"\n"}
+          <Text style={styles.bold}>mergulhe no que{"\n"} importa</Text>
+        </Text>
+        <Image
+          source={Img_TelaInicial}
+          style={styles.imagem}
+          resizeMode="contain"
+        />
+
+        {/* Botao de iniciar o aplicativo */}
+        <FocoBotao
+          titulo={"Quero iniciar!"}
+          // onPress={() => router.push("/pomodoro")} // volta na pilha de tela
+          onPress={() => router.replace("/pomodoro")} // reseta a pilha de tela
+        />
+      </View>
+      <Footer />
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: cores.fundo,
+    gap: espaco.gigante,
+  },
+  inner: {
+    gap: espaco.lg,
+  },
+  texto: {
+    color: cores.texto,
+    fontSize: fonte.titulo,
+    textAlign: "center",
+  },
+  bold: {
+    fontWeight: "bold",
+  },
+  imagem: {
+    width: 300,
+    height: 300,
+    padding: espaco.sm,
+  },
+  botao: {
+    backgroundColor: cores.destaque,
+    borderRadius: raio.pilula,
+    padding: espaco.xs,
+  },
+  botaoText: {
+    color: cores.textoSobreClaro,
+    fontSize: fonte.lg,
+    textAlign: "center",
+  },
+});
